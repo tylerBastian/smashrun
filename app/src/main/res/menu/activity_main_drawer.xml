@@ -6,7 +6,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
-            android:title="Home" />
+            android:title="Placeholder1" />
     </group>
 
     <group
@@ -14,7 +14,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_share"
-            android:title="Directory" />
+            android:title="Placeholder2" />
     </group>
 
     <group
@@ -22,7 +22,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_send"
-            android:title="About Us" />
+            android:title="Placeholder3" />
     </group>
 
 </menu>
