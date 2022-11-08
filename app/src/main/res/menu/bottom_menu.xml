@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/bottomNav1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/bottomNavOverview"
+            android:title="Overview" />
+    </group>
+
+    <group
+        android:id="@+id/bottomNav2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/bottomNavRuns"
+            android:title="Runs" />
+    </group>
+
+    <group
+        android:id="@+id/bottomNav3"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/bottomNavAddRun"
+            android:title="Add" />
+    </group>
+
+    <group
+        android:id="@+id/bottomNav4"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/bottomNavBadges"
+            android:title="Badges" />
+    </group>
+
+</menu>

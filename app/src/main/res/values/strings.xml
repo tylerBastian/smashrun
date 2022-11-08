@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">SMASHRUN</string>
+    <string name="createAcc">Create Account</string>
+    <string name="password">Password</string>
+    <string name="submit">SUBMIT</string>
+    <string name="haveAcc">Have an account? Click to login</string>
+    <string name="email">Email</string>
+    <string name="home_page">Placeholder After Login</string>
+    <string name="logout">LOGOUT</string>
+    <string name="login">LOGIN</string>
+    <string name="noAccount">No Account? Click to create one</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="navigation_drawer_open">test</string>
+    <string name="navigation_drawer_close">test2</string>
+</resources>
