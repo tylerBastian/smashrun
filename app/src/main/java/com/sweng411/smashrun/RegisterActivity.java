@@ -13,23 +13,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
+//import com.google.android.gms.tasks.OnCompleteListener;
+//import com.google.android.gms.tasks.Task;
+//import com.google.firebase.auth.AuthResult;
+//import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText userName,password;
     TextView AccountExists;
     Button register;
-    private FirebaseAuth mAuth;//Used for firebase authentication
+    //private FirebaseAuth mAuth;//Used for firebase authentication
 
     private ProgressDialog loadingBar;//Used to show the progress of the registration process
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        mAuth = FirebaseAuth.getInstance();
+        //mAuth = FirebaseAuth.getInstance();
         userName = (EditText) findViewById(R.id.username2);
         password = (EditText) findViewById(R.id.Password2);
         register = (Button) findViewById(R.id.submit_btn);
@@ -70,24 +70,24 @@ public class RegisterActivity extends AppCompatActivity {
             loadingBar.setMessage("Please wait, we are creating new Account");
             loadingBar.setCanceledOnTouchOutside(true);
             loadingBar.show();
-            mAuth.createUserWithEmailAndPassword(email,pwd)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful())//If account creation successful print message and send user to Login Activity
-                            {
-                                sendUserToLoginActivity();
-                                Toast.makeText(RegisterActivity.this,"Account created successfully",Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            }
-                            else//Print the error message incase of failure
-                            {
-                                String msg = task.getException().toString();
-                                Toast.makeText(RegisterActivity.this,"Error: "+msg,Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            }
-                        }
-                    });
+//            mAuth.createUserWithEmailAndPassword(email,pwd)
+//                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<AuthResult> task) {
+//                            if(task.isSuccessful())//If account creation successful print message and send user to Login Activity
+//                            {
+//                                sendUserToLoginActivity();
+//                                Toast.makeText(RegisterActivity.this,"Account created successfully",Toast.LENGTH_SHORT).show();
+//                                loadingBar.dismiss();
+//                            }
+//                            else//Print the error message incase of failure
+//                            {
+//                                String msg = task.getException().toString();
+//                                Toast.makeText(RegisterActivity.this,"Error: "+msg,Toast.LENGTH_SHORT).show();
+//                                loadingBar.dismiss();
+//                            }
+//                        }
+//                    });
         }
     }
 

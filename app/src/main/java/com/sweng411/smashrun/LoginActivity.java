@@ -1,142 +1,242 @@
 package com.sweng411.smashrun;
 
-import android.app.ProgressDialog;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.format.Time;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import okio.BufferedSink;
+
 
 public class LoginActivity extends AppCompatActivity {
-    EditText userName,password;
-    Button login;
-    TextView register,forgotPassword;
-    FirebaseUser currentUser;//used to store current user of account
-    FirebaseAuth mAuth;//Used for firebase authentication
-    ProgressDialog loadingBar;
+
+    String clientID = "classdemo_a1d8w1";
+    String secret = "66fghqw74";
+    String specialRedirect = "urn:ietf:wg:oauth:2.0:oob";
+    String scope = "read_activity write_activity";
+    String AuthURLString = "https://secure.smashrun.com/oauth2/token";
+    String CheckUrlString = "https://api.smashrun.com/v1/auth/";
+    SharedPreferences sharedPref;
+    private final OkHttpClient client = new OkHttpClient();
+
+
+    // Prepare URL
+    Uri uri = Uri.parse("https://secure.smashrun.com/oauth2/authenticate?")
+            .buildUpon()
+            .appendQueryParameter("client_id", clientID)
+            .appendQueryParameter("redirect_uri", specialRedirect)
+            .appendQueryParameter("response_type", "code")
+            .appendQueryParameter("scope", scope)
+            .appendQueryParameter("state", "mystate")
+            .build();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        userName = (EditText) findViewById(R.id.email);
-        password = (EditText) findViewById(R.id.pwd);
-        login = (Button) findViewById(R.id.login_btn);
-        register = (TextView) findViewById(R.id.registerLink);
-        forgotPassword = (TextView) findViewById(R.id.ForgetPassword);
-        mAuth = FirebaseAuth.getInstance();
-        loadingBar = new ProgressDialog(this);
-        currentUser = mAuth.getCurrentUser();
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AllowUserToLogin();
-            }
-        });
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendUserToRegister();
-            }
-        });
-        //if user forgets the password then to reset it
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resetPasswordUser();
-            }
-        });
+        sharedPref = getSharedPreferences("com.sweng411.smashrun", Context.MODE_PRIVATE);
     }
 
-    private void resetPasswordUser() {
-        String email = userName.getText().toString().trim();
-        if(TextUtils.isEmpty(email))
-        {
-            Toast.makeText(LoginActivity.this,"Please enter your email id",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Reset email sent", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        }
-    }
-
-    private void sendUserToRegister() {
-        //When user wants to create a new account send user to Register Activity
-        Intent registerIntent = new Intent(LoginActivity.this,RegisterActivity.class);
-        startActivity(registerIntent);
-    }
-
-    private void AllowUserToLogin() {
-        String email = userName.getText().toString().trim();
-        String pwd = password.getText().toString();
-        if(TextUtils.isEmpty(email))
-        {
-            Toast.makeText(LoginActivity.this,"Please enter email id",Toast.LENGTH_SHORT).show();
-        }
-        if(TextUtils.isEmpty(pwd))
-        {
-            Toast.makeText(LoginActivity.this,"Please enter password",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            //When both email and password are available log in to the account
-            //Show the progress on Progress Dialog
-            loadingBar.setTitle("Sign In");
-            loadingBar.setMessage("Please wait ,Because Good things always take time");
-            mAuth.signInWithEmailAndPassword(email,pwd)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful())//If account login successful print message and send user to main Activity
-                            {
-                                sendToMainActivity();
-                                Toast.makeText(LoginActivity.this,"Welcome to Reference Center",Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            }
-                            else//Print the error message incase of failure
-                            {
-                                String msg = task.getException().toString();
-                                Toast.makeText(LoginActivity.this,"Error: "+msg,Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            }
-                        }
-                    });
-        }
-    }
 
     protected void onStart() {
         //Check if user has already signed in if yes send to mainActivity
         //This to avoid signing in everytime you open the app.
         super.onStart();
-        if(currentUser!=null)
-        {
-            sendToMainActivity();
+        String accessToken = sharedPref.getString("token", "");
+        Log.d("Auth", "Current token: " + accessToken);
+        if(accessToken == "") {
+            String authToken = sharedPref.getString("auth", "");
+            if(authToken == "") {
+                GetAuthToken();
+            }
+            else {
+                try {
+                    GetAccessToken(authToken);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+        else {
+            CheckIfExpired(accessToken);
+        }
+
+
+
+    }
+
+    private void CheckIfExpired(String accessToken) {
+        Request request = new Request.Builder()
+                .url(CheckUrlString + accessToken)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try(ResponseBody responseBody = response.body()) {
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                    String expireString = responseBody.string();
+                    JSONObject reponseJson = new JSONObject(expireString);
+
+                    int expireTime = reponseJson.getInt("expires_in");
+                    Log.d("Auth", "Expires in: " + expireTime);
+
+                    if(expireTime == 0) {
+                        //Refresh Access Token
+                    }
+                    else {
+                        sendToMainActivity();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+
+    private void GetAuthToken() {
+
+        //Sets up a webpage to get the Authentication token for step 1 of OAUTH
+        WebView webView = new WebView(this);
+        webView.loadUrl(uri.toString());
+        webView.getSettings().setJavaScriptEnabled(true);
+
+        //Puts the webpage into view
+
+        Log.d("Auth", "Setting webview");
+        setContentView(webView);
+
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                //Once the page loads, grab the authentication token from the title
+                String authToken = view.getTitle();
+
+
+                if (!authToken.equals("Smashrun - Stats for runners")) {
+                    try {
+                        Log.d("Auth", "New Authentication Token: " + authToken);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("auth", authToken);
+                        editor.apply();
+
+                        GetAccessToken(authToken);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    finish();
+                }
+
+
+            }
+        });
+    }
+
+    private void GetAccessToken(String authToken) throws IOException {
+        //Creates a URL for POST call with AUTH Token
+
+        RequestBody requestBody = new RequestBody() {
+            @Override
+            public MediaType contentType() {
+                return MediaType.parse("application/x-www-form-urlencoded; charset=utf-8");
+            }
+
+            @Override
+            public void writeTo(BufferedSink sink) throws IOException {
+                String postParams = "grant_type=authorization_code&code=" + authToken + "&client_id=" + clientID + "&client_secret=" + secret;
+                OutputStream os = sink.outputStream();
+                byte[] input = postParams.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+        };
+
+        Request request = new Request.Builder()
+                .url(AuthURLString)
+                .post(requestBody)
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+                String responseBody = response.body().string();
+                Log.d ("Auth", responseBody);
+
+                try {
+                    JSONObject JsonResponse = new JSONObject(responseBody);
+                    //Store keys in Shared Preferences
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("token", JsonResponse.getString("access_token"));
+                    editor.putString("refresh", JsonResponse.getString("refresh_token"));
+                    editor.apply();
+                    sendToMainActivity();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
+
+
     }
 
     private void sendToMainActivity() {
         //This is to send user to MainActivity
-        Intent  MainIntent = new Intent(LoginActivity.this,MainActivity.class);
+        Intent MainIntent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(MainIntent);
     }
 }
