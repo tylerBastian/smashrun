@@ -9,9 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.WebStorage;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,24 +19,41 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import okhttp3.Protocol;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
+
+//gVN65rU@c5tc
 public class MainActivity extends AppCompatActivity {
 
     Button logout;
+    Button get_test;
 
     private  Toolbar myToolbar;
     private DrawerLayout myDrawerLayout;
     private BottomNavigationView bottomNavigationView;
     private SharedPreferences sharedPref;
+    private OkHttpClient okHttpClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPref = getSharedPreferences("com.sweng411.smashrun", Context.MODE_PRIVATE);
-
         setContentView(R.layout.activity_main);
 
+        List<Protocol> protocols = new ArrayList<Protocol>();
+        protocols.add(Protocol.HTTP_1_1);
+        okHttpClient = new OkHttpClient.Builder().protocols(protocols).build();
+
         logout = (Button)findViewById(R.id.logout);
+        get_test = (Button)findViewById(R.id.get_test);
         //To logout from the application
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
                 sendToLoginActivity();
             }
         });
+
+        //This is to test the get request
+        get_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getTest();
+            }
+        });
+
+
 
         myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -108,4 +135,52 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    private void getTest(){
+        String url = "https://api.smashrun.com/v1/my/activities";
+        String token = sharedPref.getString("token", "");
+        String auth = sharedPref.getString("auth", "");
+        String response = "";
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + token)
+                //.addHeader("Authorization", "Basic " + auth)
+                .build();
+        Log.d("built request", "success");
+        Log.d("request", request.toString());
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                Log.d("onFailure", "failure");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("onResponse", "entered");
+                if (response.isSuccessful()) {
+                    Log.d("onResponse", "success");
+                    final String myResponse = response.body().string();
+                    Log.d("Response", myResponse);
+
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("Response", myResponse);
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+        //return response;
+
 }
+
+
+
+
+
+
+
