@@ -1,12 +1,26 @@
 package com.sweng411.smashrun;
 
+import static com.sweng411.smashrun.MainActivity.clearCookies;
+import static com.sweng411.smashrun.MainActivity.getOkHttpClient;
+import static com.sweng411.smashrun.MainActivity.getSharedPref;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,9 +70,79 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        Button get_test = (Button) view.findViewById(R.id.get_test);
+        Button logout = (Button) view.findViewById(R.id.logout);
+        get_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getTest();
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = getSharedPref().edit();
+                editor.putString("token", "");
+                editor.putString("auth", "");
+                editor.apply();
+                //This is to make it so you have to re input your login stuff on their webpage, mostly for testing purposes
+                clearCookies(view.getContext());
+                sendToLoginActivity();
+            }
+        });
+
+        return view;
     }
+
+    private void sendToLoginActivity() {
+        //To send user to Login Activity
+        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(loginIntent);
+    }
+
+
+    public void getTest(){
+        String url = "https://api.smashrun.com/v1/my/activities";
+        String token = getSharedPref().getString("token", "");
+        String auth = getSharedPref().getString("auth", "");
+        String response = "";
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + token)
+                //.addHeader("Authorization", "Basic " + auth)
+                .build();
+        Log.d("built request", "success");
+        Log.d("request", request.toString());
+        getOkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                Log.d("onFailure", "failure");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("onResponse", "entered");
+                if (response.isSuccessful()) {
+                    Log.d("onResponse", "success");
+                    final String myResponse = response.body().string();
+                    Log.d("Response", myResponse);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("Response", myResponse);
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
+
 }
