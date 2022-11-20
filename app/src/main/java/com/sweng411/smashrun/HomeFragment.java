@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment {
         get_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getTest();
+                getAllActivities();
             }
         });
 
@@ -105,7 +105,7 @@ public class HomeFragment extends Fragment {
     }
 
 
-    public void getTest(){
+    public void getAllActivities(){
         String url = "https://api.smashrun.com/v1/my/activities";
         String token = getSharedPref().getString("token", "");
         String auth = getSharedPref().getString("auth", "");

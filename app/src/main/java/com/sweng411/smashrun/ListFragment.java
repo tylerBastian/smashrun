@@ -1,12 +1,39 @@
 package com.sweng411.smashrun;
 
+import static com.sweng411.smashrun.MainActivity.getOkHttpClient;
+import static com.sweng411.smashrun.MainActivity.getSharedPref;
+
+import static java.lang.Thread.sleep;
+
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +46,15 @@ public class ListFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private RecyclerView mRecyclerView;
+    private List<Object> viewItems = new ArrayList<>();
+
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+    private static final String TAG = "ListFragment";
+    private String jsonString;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -59,6 +95,113 @@ public class ListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        getRecentActivities();
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "onCreateView: " + jsonString);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recentRunsList);
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        layoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new RunListAdapter(getContext(), viewItems);
+        mRecyclerView.setAdapter(mAdapter);
+
+        addItemsFromJSON(jsonString);
+
+        return view;
     }
+
+
+    //get 10 most recent activities
+    public void getRecentActivities(){
+        String url = "https://api.smashrun.com/v1/my/activities/search?page=0&count=10";
+        String token = getSharedPref().getString("token", "");
+        String auth = getSharedPref().getString("auth", "");
+        final String[] jsonResult = {""};
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+        Log.d("request", request.toString());
+        getOkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                Log.d("onFailure", "failure");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("onResponse", "entered");
+                if (response.isSuccessful()) {
+                    Log.d("onResponse", "success");
+                    jsonString = response.body().string();
+                    Log.d("Response", jsonString);
+                    //jsonString = myResponse;
+                    Log.d("returnString", jsonString);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("Response", jsonString + " in run");
+                        }
+                    });
+                }
+            }
+        });
+
+        //return jsonString;
+    }
+
+
+    private void addItemsFromJSON(String json) {
+        try {
+            String jsonDataString = json;
+            JSONArray jsonArray = new JSONArray(jsonDataString);
+
+            for (int i=0; i<jsonArray.length(); ++i) {
+
+                JSONObject itemObj = jsonArray.getJSONObject(i);
+
+                String date = itemObj.getString("startDateTimeLocal");
+                Date dateObj = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
+                String dateStr = new SimpleDateFormat("MM/dd/yyyy").format(dateObj);
+                date = dateStr;
+                Log.d("date", date);
+
+                String distance = itemObj.getString("distance");
+                distance = String.format("%.2f", Double.parseDouble(distance)*0.621371);
+                Log.d("distance", distance);
+
+                String duration = itemObj.getString("duration");
+                String durationStr = DateUtils.formatElapsedTime((long) Double.parseDouble(duration));
+                Log.d("duration", durationStr);
+
+                String pace = String.valueOf(Double.parseDouble(duration) / Double.parseDouble(distance));
+                String paceStr = DateUtils.formatElapsedTime((long) Double.parseDouble(pace));
+                Log.d("pace", pace);
+
+                String calories = itemObj.getString("calories");
+                Log.d("calories", calories);
+
+                Runs runs = new Runs(date, distance, durationStr, paceStr, calories);
+                viewItems.add(runs);
+            }
+
+        } catch (JSONException e) {
+            Log.d(TAG, "addItemsFromJSON: ", e);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
