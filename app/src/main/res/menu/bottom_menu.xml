@@ -5,8 +5,8 @@
         android:id="@+id/bottomNav1"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/bottomNavOverview"
-            android:title="Overview" />
+            android:id="@+id/bottomNavHome"
+            android:title="Home" />
     </group>
 
     <group
@@ -21,8 +21,8 @@
         android:id="@+id/bottomNav3"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/bottomNavAddRun"
-            android:title="Add" />
+            android:id="@+id/bottomNavList"
+            android:title="List" />
     </group>
 
     <group
