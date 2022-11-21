@@ -40,14 +40,13 @@ public class MainActivity extends AppCompatActivity {
     private  Toolbar myToolbar;
     private DrawerLayout myDrawerLayout;
     private BottomNavigationView bottomNavigationView;
-    private HomeFragment homeFragment = new HomeFragment();
-    private RunsFragment runsFragment = new RunsFragment();
-    private ListFragment listFragment = new ListFragment();
-    private BadgesFragment badgesFragment = new BadgesFragment();
+    private HomeFragment homeFragment;
     private static List<Protocol> protocols = new ArrayList<>();
     private static OkHttpClient okHttpClient;
 
     private static SharedPreferences sharedPref;
+    private static boolean listLoaded = false;
+    private static String jsonString;
 
 
     @Override
@@ -60,43 +59,18 @@ public class MainActivity extends AppCompatActivity {
         protocols.add(Protocol.HTTP_1_1);
         okHttpClient = new OkHttpClient.Builder().protocols(protocols).build();
 
-        //logout = (Button)findViewById(R.id.logout);
-        //get_test = (Button)findViewById(R.id.get_test);
-        //To logout from the application
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                SharedPreferences.Editor editor = sharedPref.edit();
-//                editor.putString("token", "");
-//                editor.putString("auth", "");
-//                editor.apply();
-//                //This is to make it so you have to re input your login stuff on their webpage, mostly for testing purposes
-//                clearCookies(view.getContext());
-//                sendToLoginActivity();
-//            }
-//        });
-
-        //This is to test the get request
-//        get_test.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                getTest();
-//            }
-//        });
-
-
-
+        //Toolbar and Navigation Drawer
         myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-
         myDrawerLayout = findViewById(R.id.drawer_layout);
-
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, myDrawerLayout, myToolbar,
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         myDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        homeFragment = new HomeFragment();
+        //Bottom Navigation
         bottomNavigationView = findViewById(R.id.bottom_nav_view);
         getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
 
@@ -170,46 +144,20 @@ public class MainActivity extends AppCompatActivity {
         return okHttpClient;
     }
 
+    public static void setListLoaded(boolean listLoaded) {
+        MainActivity.listLoaded = listLoaded;
+    }
+    public static boolean isListLoaded() {
+        return listLoaded;
+    }
 
-//    public void getTest(){
-//        String url = "https://api.smashrun.com/v1/my/activities";
-//        String token = sharedPref.getString("token", "");
-//        String auth = sharedPref.getString("auth", "");
-//        String response = "";
-//        okhttp3.Request request = new okhttp3.Request.Builder()
-//                .url(url)
-//                .addHeader("Authorization", "Bearer " + token)
-//                //.addHeader("Authorization", "Basic " + auth)
-//                .build();
-//        Log.d("built request", "success");
-//        Log.d("request", request.toString());
-//        okHttpClient.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-//                e.printStackTrace();
-//                Log.d("onFailure", "failure");
-//            }
-//
-//            @Override
-//            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-//                Log.d("onResponse", "entered");
-//                if (response.isSuccessful()) {
-//                    Log.d("onResponse", "success");
-//                    final String myResponse = response.body().string();
-//                    Log.d("Response", myResponse);
-//
-//                    MainActivity.this.runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Log.d("Response", myResponse);
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//
-//    }
-        //return response;
+    public static void setJsonString(String jsonString) {
+        MainActivity.jsonString = jsonString;
+    }
+    public static String getJsonString() {
+        return jsonString;
+    }
+
 
 }
 

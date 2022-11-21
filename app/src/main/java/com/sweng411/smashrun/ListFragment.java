@@ -1,7 +1,11 @@
 package com.sweng411.smashrun;
 
+import static com.sweng411.smashrun.MainActivity.getJsonString;
 import static com.sweng411.smashrun.MainActivity.getOkHttpClient;
 import static com.sweng411.smashrun.MainActivity.getSharedPref;
+import static com.sweng411.smashrun.MainActivity.isListLoaded;
+import static com.sweng411.smashrun.MainActivity.setJsonString;
+import static com.sweng411.smashrun.MainActivity.setListLoaded;
 
 import static java.lang.Thread.sleep;
 
@@ -54,7 +58,7 @@ public class ListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
 
     private static final String TAG = "ListFragment";
-    private String jsonString;
+    //private String jsonString;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -96,13 +100,17 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-        getRecentActivities();
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (!isListLoaded()){
+            getRecentActivities();
+            Log.d(TAG, "onCreateView: " + "made api call");
+            setListLoaded(true);
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        Log.d(TAG, "onCreateView: " + jsonString);
+        Log.d(TAG, "onCreateView: " + getJsonString());
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recentRunsList);
         mRecyclerView.setHasFixedSize(true);
@@ -115,7 +123,7 @@ public class ListFragment extends Fragment {
         mAdapter = new RunListAdapter(getContext(), viewItems);
         mRecyclerView.setAdapter(mAdapter);
 
-        addItemsFromJSON(jsonString);
+        addItemsFromJSON(getJsonString());
 
         return view;
     }
@@ -144,15 +152,16 @@ public class ListFragment extends Fragment {
                 Log.d("onResponse", "entered");
                 if (response.isSuccessful()) {
                     Log.d("onResponse", "success");
-                    jsonString = response.body().string();
-                    Log.d("Response", jsonString);
+                    setJsonString(response.body().string());
+                    //jsonString = response.body().string();
+                    Log.d("Response", getJsonString());
                     //jsonString = myResponse;
-                    Log.d("returnString", jsonString);
+                    Log.d("returnString", getJsonString());
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("Response", jsonString + " in run");
+                            Log.d("Response", getJsonString() + " in run");
                         }
                     });
                 }
