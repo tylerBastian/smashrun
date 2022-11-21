@@ -7,12 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -20,22 +17,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.Protocol;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
-import okhttp3.Response;
 
 //gVN65rU@c5tc
 public class MainActivity extends AppCompatActivity {
-
-    private Button logout;
-    private Button get_test;
 
     private  Toolbar myToolbar;
     private DrawerLayout myDrawerLayout;
@@ -55,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences("com.sweng411.smashrun", Context.MODE_PRIVATE);
         setContentView(R.layout.activity_main);
 
-        //List<Protocol>protocols = new ArrayList<Protocol>();
         protocols.add(Protocol.HTTP_1_1);
         okHttpClient = new OkHttpClient.Builder().protocols(protocols).build();
 
@@ -144,13 +131,14 @@ public class MainActivity extends AppCompatActivity {
         return okHttpClient;
     }
 
+
+    //Managing ListFragment data, probably not the best way to do this
     public static void setListLoaded(boolean listLoaded) {
         MainActivity.listLoaded = listLoaded;
     }
     public static boolean isListLoaded() {
         return listLoaded;
     }
-
     public static void setJsonString(String jsonString) {
         MainActivity.jsonString = jsonString;
     }

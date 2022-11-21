@@ -51,7 +51,10 @@
             app:menu="@menu/bottom_menu"
             android:background="@color/bottomNavBackground"
             app:labelVisibilityMode="labeled"
-            app:itemTextColor="@color/textColorWhite">
+            app:itemTextColor="@color/textColorWhite"
+            app:itemIconTint="@color/colorPrimary"
+            app:itemIconSize="35dp"
+            >
 
         </com.google.android.material.bottomnavigation.BottomNavigationView>
 

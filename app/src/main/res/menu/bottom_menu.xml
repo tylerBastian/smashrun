@@ -6,7 +6,9 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/bottomNavHome"
-            android:title="Home" />
+            android:title="Home"
+            android:icon="@drawable/home_icon_foreground"
+            />
     </group>
 
     <group
@@ -14,7 +16,9 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/bottomNavRuns"
-            android:title="Runs" />
+            android:title="By Run"
+            android:icon="@drawable/runs_icon_foreground"
+            />
     </group>
 
     <group
@@ -22,7 +26,9 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/bottomNavList"
-            android:title="List" />
+            android:title="List"
+            android:icon="@drawable/list_icon_foreground"
+            />
     </group>
 
     <group
@@ -30,7 +36,9 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/bottomNavBadges"
-            android:title="Badges" />
+            android:title="Badges"
+            android:icon="@drawable/badges_icon_foreground"
+            />
     </group>
 
 </menu>
