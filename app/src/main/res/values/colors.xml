@@ -8,6 +8,7 @@
     <color name="textColorWhite">#EFEFEF</color>
     <color name="textColorBlack">#0E0E0E</color>
     <color name="bottomNavBackground">#0E0E0E</color>
-    <color name="listCardBackground">#D3D3D3</color>
+    <color name="listCardBackground">#414141</color>
+    <color name="listCardBorder">#4E4E4E</color>
     <color name="iconColorNotSelected">#808080</color>
 </resources>

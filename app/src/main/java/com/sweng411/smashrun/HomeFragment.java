@@ -75,6 +75,9 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         Button get_test = (Button) view.findViewById(R.id.get_test);
         Button logout = (Button) view.findViewById(R.id.logout);
+
+        getActivity().setTitle("Overview");
+
         get_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

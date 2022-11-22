@@ -11,18 +11,23 @@
             />
         <item
             android:id="@+id/bottomNavRuns"
-            android:title="By Run"
+            android:title="Runs"
             android:icon="@drawable/runs_icon_foreground"
             />
         <item
-            android:id="@+id/bottomNavList"
-            android:title="List"
-            android:icon="@drawable/list_icon_foreground"
+            android:id="@+id/bottomNavAddRun"
+            android:title="Add Run"
+            android:icon="@drawable/add_icon_foreground"
             />
         <item
             android:id="@+id/bottomNavBadges"
             android:title="Badges"
             android:icon="@drawable/badges_icon_foreground"
+            />
+        <item
+            android:id="@+id/bottomNavProfile"
+            android:title="Profile"
+            android:icon="@drawable/profile_icon_foreground"
             />
     </group>
 

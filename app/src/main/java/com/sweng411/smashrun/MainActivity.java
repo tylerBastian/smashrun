@@ -78,11 +78,14 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.bottomNavRuns:
                         getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new RunsFragment()).commit();
                         return true;
-                    case R.id.bottomNavList:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ListFragment()).commit();
+                    case R.id.bottomNavAddRun:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new AddRunFragment()).commit();
                         return true;
                     case R.id.bottomNavBadges:
                         getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new BadgesFragment()).commit();
+                        return true;
+                    case R.id.bottomNavProfile:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ProfileFragment()).commit();
                         return true;
                 }
                 return false;

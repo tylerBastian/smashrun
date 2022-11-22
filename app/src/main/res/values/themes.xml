@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="background">@color/background</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -15,13 +15,13 @@
     </style>
 
     <!-- TOOLBAR TITLE THEME -->
-    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">30sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/textColorWhite</item>
-        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif</item>
-        <item name="android:layout_gravity">center</item>
-    </style>
+<!--    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">-->
+<!--        <item name="android:textSize">30sp</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--        <item name="android:textColor">@color/textColorWhite</item>-->
+<!--        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif</item>-->
+<!--        <item name="android:layout_gravity">center</item>-->
+<!--    </style>-->
 
 
 </resources>

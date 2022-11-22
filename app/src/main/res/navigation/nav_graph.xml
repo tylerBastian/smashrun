@@ -11,14 +11,14 @@
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/runsFragment"
-        android:name="com.sweng411.smashrun.RunsFragment"
+        android:name="com.sweng411.smashrun.AddRunFragment"
         android:label="fragment_runs"
-        tools:layout="@layout/fragment_runs" />
+        tools:layout="@layout/fragment_add_run" />
     <fragment
         android:id="@+id/listFragment"
-        android:name="com.sweng411.smashrun.ListFragment"
+        android:name="com.sweng411.smashrun.RunsFragment"
         android:label="fragment_list"
-        tools:layout="@layout/fragment_list" />
+        tools:layout="@layout/fragment_runs" />
     <fragment
         android:id="@+id/badgesFragment"
         android:name="com.sweng411.smashrun.BadgesFragment"

@@ -15,17 +15,16 @@
         tools:context="com.sweng411.smashrun.MainActivity"
         android:background="@color/background">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             app:layout_constraintTop_toTopOf="parent"
-            app:titleTextAppearance="@style/Toolbar.TitleText"
-            app:titleTextColor="@color/textColorWhite"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
             >
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"

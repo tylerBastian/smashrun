@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
 xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent"
 xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/listCardBackground"
-app:cardCornerRadius="8dp"
+app:cardBackgroundColor="@color/listCardBackground"
+app:cardCornerRadius="10dp"
+app:cardElevation="5dp"
+app:strokeColor="@color/textColorWhite"
+app:strokeWidth=".5dp"
 android:padding="5dp"
 android:layout_margin="5dp"
 android:layout_height="wrap_content">
@@ -24,7 +27,7 @@ android:layout_height="wrap_content">
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/textColorBlack"
+            android:textColor="@color/textColorWhite"
             android:textAlignment="center"
             />
         <TextView
@@ -32,7 +35,7 @@ android:layout_height="wrap_content">
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/textColorBlack"
+            android:textColor="@color/textColorWhite"
             android:textAlignment="center"
             />
         <TextView
@@ -40,7 +43,7 @@ android:layout_height="wrap_content">
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/textColorBlack"
+            android:textColor="@color/textColorWhite"
             android:textAlignment="center"
             />
         <TextView
@@ -48,7 +51,7 @@ android:layout_height="wrap_content">
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/textColorBlack"
+            android:textColor="@color/textColorWhite"
             android:textAlignment="center"
             />
         <TextView
@@ -56,9 +59,9 @@ android:layout_height="wrap_content">
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/textColorBlack"
+            android:textColor="@color/textColorWhite"
             android:textAlignment="center"
             />
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

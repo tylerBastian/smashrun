@@ -6,22 +6,86 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".RunsFragment">
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/run_list_header"
+        android:layout_width="match_parent"
+        app:cardBackgroundColor="@color/listCardBackground"
+        app:cardCornerRadius="4dp"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/run_date_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/textColorWhite"
+                android:text="Date"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/run_distance_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/textColorWhite"
+                android:textAlignment="center"
+                android:text="Distance"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/run_calories_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/textColorWhite"
+                android:textAlignment="center"
+                android:text="Calories"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/run_duration_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/textColorWhite"
+                android:textAlignment="center"
+                android:text="Duration"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/run_pace_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/textColorWhite"
+                android:textAlignment="center"
+                android:text="Pace"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+        </TableRow>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="321dp"
-        android:layout_height="72dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Runs Fragment Placeholder"
-        android:textColor="@color/textColorWhite"
-        android:textSize="25sp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recentRunsList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.379" />
+        app:layout_constraintTop_toBottomOf="@id/run_list_header" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
