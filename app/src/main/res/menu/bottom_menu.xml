@@ -9,31 +9,16 @@
             android:title="Home"
             android:icon="@drawable/home_icon_foreground"
             />
-    </group>
-
-    <group
-        android:id="@+id/bottomNav2"
-        android:checkableBehavior="single">
         <item
             android:id="@+id/bottomNavRuns"
             android:title="By Run"
             android:icon="@drawable/runs_icon_foreground"
             />
-    </group>
-
-    <group
-        android:id="@+id/bottomNav3"
-        android:checkableBehavior="single">
         <item
             android:id="@+id/bottomNavList"
             android:title="List"
             android:icon="@drawable/list_icon_foreground"
             />
-    </group>
-
-    <group
-        android:id="@+id/bottomNav4"
-        android:checkableBehavior="single">
         <item
             android:id="@+id/bottomNavBadges"
             android:title="Badges"

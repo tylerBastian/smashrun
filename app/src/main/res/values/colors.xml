@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FF6122</color>
+    <color name="colorPrimaryUnselected">#FF8D60</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF2222</color>
     <color name="background">#222222</color>
@@ -8,4 +9,5 @@
     <color name="textColorBlack">#0E0E0E</color>
     <color name="bottomNavBackground">#0E0E0E</color>
     <color name="listCardBackground">#D3D3D3</color>
+    <color name="iconColorNotSelected">#808080</color>
 </resources>

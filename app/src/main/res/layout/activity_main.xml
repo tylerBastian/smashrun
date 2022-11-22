@@ -51,8 +51,8 @@
             app:menu="@menu/bottom_menu"
             android:background="@color/bottomNavBackground"
             app:labelVisibilityMode="labeled"
-            app:itemTextColor="@color/textColorWhite"
-            app:itemIconTint="@color/colorPrimary"
+            app:itemTextColor="@drawable/icon_color_selector"
+            app:itemIconTint="@drawable/icon_color_selector"
             app:itemIconSize="35dp"
             >
 
