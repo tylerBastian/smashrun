@@ -166,6 +166,7 @@ public class ListFragment extends Fragment {
 //    }
 
 
+    //Display 20 most recent runs
     private void addItemsFromJSON(String json) {
         try {
             String jsonDataString = json;
