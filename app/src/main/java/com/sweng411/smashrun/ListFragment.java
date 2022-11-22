@@ -98,17 +98,17 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-        if (!isListLoaded()){
-            getRecentActivities();
-            Log.d(TAG, "onCreateView: " + "made api call");
-            setListLoaded(true);
-            try {
-                sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        Log.d(TAG, "onCreateView: " + getJsonString());
+//        if (!isListLoaded()){
+//            getRecentActivities();
+//            Log.d(TAG, "onCreateView: " + "made api call");
+//            setListLoaded(true);
+//            try {
+//                sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        Log.d(TAG, "onCreateView: " + getJsonString());
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recentRunsList);
         mRecyclerView.setHasFixedSize(true);
@@ -128,45 +128,42 @@ public class ListFragment extends Fragment {
 
 
     //get 10 most recent activities
-    public void getRecentActivities(){
-        String url = "https://api.smashrun.com/v1/my/activities/search?page=0&count=10";
-        String token = getSharedPref().getString("token", "");
-        String auth = getSharedPref().getString("auth", "");
-        final String[] jsonResult = {""};
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url)
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
-        Log.d("request", request.toString());
-        getOkHttpClient().newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-                Log.d("onFailure", "failure");
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.d("onResponse", "entered");
-                if (response.isSuccessful()) {
-                    Log.d("onResponse", "success");
-                    setJsonString(response.body().string());
-                    //jsonString = response.body().string();
-                    Log.d("Response", getJsonString());
-                    //jsonString = myResponse;
-                    Log.d("returnString", getJsonString());
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.d("Response", getJsonString() + " in run");
-                        }
-                    });
-                }
-            }
-        });
-
-    }
+//    public void getRecentActivities(){
+//        String url = "https://api.smashrun.com/v1/my/activities/search?page=0&count=10";
+//        String token = getSharedPref().getString("token", "");
+//        String auth = getSharedPref().getString("auth", "");
+//        okhttp3.Request request = new okhttp3.Request.Builder()
+//                .url(url)
+//                .addHeader("Authorization", "Bearer " + token)
+//                .build();
+//        Log.d("request", request.toString());
+//        getOkHttpClient().newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+//                e.printStackTrace();
+//                Log.d("onFailure", "failure");
+//            }
+//
+//            @Override
+//            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+//                Log.d("onResponse", "entered");
+//                if (response.isSuccessful()) {
+//                    Log.d("onResponse", "success");
+//                    setJsonString(response.body().string());
+//                    Log.d("Response", getJsonString());
+//                    Log.d("returnString", getJsonString());
+//
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Log.d("Response", getJsonString() + " in run");
+//                        }
+//                    });
+//                }
+//            }
+//        });
+//
+//    }
 
 
     private void addItemsFromJSON(String json) {
@@ -174,7 +171,7 @@ public class ListFragment extends Fragment {
             String jsonDataString = json;
             JSONArray jsonArray = new JSONArray(jsonDataString);
 
-            for (int i=0; i<jsonArray.length(); ++i) {
+            for (int i=0; i<20; ++i) {
 
                 JSONObject itemObj = jsonArray.getJSONObject(i);
 

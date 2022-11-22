@@ -113,7 +113,6 @@ public class HomeFragment extends Fragment {
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Bearer " + token)
-                //.addHeader("Authorization", "Basic " + auth)
                 .build();
         Log.d("built request", "success");
         Log.d("request", request.toString());

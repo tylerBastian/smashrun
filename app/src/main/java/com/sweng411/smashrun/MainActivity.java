@@ -18,10 +18,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Protocol;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 
 //gVN65rU@c5tc
 public class MainActivity extends AppCompatActivity {
@@ -83,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Call api, load activities into json string
+        getAllActivities();
+
     }
 
     @Override
@@ -130,6 +139,44 @@ public class MainActivity extends AppCompatActivity {
 
     public static OkHttpClient getOkHttpClient() {
         return okHttpClient;
+    }
+
+
+    private void getAllActivities(){
+        String url = "https://api.smashrun.com/v1/my/activities";
+        String token = getSharedPref().getString("token", "");
+        String auth = getSharedPref().getString("auth", "");
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+        Log.d("built request", "success");
+        Log.d("request", request.toString());
+        getOkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                Log.d("onFailure", "failure");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("onResponse", "entered");
+                if (response.isSuccessful()) {
+                    Log.d("onResponse", "success");
+                    setJsonString(response.body().string());
+                    Log.d("Response", getJsonString());
+                    Log.d("returnString", getJsonString());
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("Response", getJsonString() + " in run");
+                        }
+                    });
+                }
+            }
+        });
     }
 
 
