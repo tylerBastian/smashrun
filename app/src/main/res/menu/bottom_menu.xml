@@ -6,7 +6,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/bottomNavHome"
-            android:title="Home"
+            android:title="Overview"
             android:icon="@drawable/home_icon_foreground"
             />
         <item

@@ -73,70 +73,11 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        //Button logout = (Button) view.findViewById(R.id.logout);
 
         getActivity().setTitle("Overview");
 
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                SharedPreferences.Editor editor = getSharedPref().edit();
-//                editor.putString("token", "");
-//                editor.putString("auth", "");
-//                editor.apply();
-//                //This is to make it so you have to re input your login stuff on their webpage, mostly for testing purposes
-//                clearCookies(view.getContext());
-//                sendToLoginActivity();
-//            }
-//        });
-
         return view;
     }
-
-    private void sendToLoginActivity() {
-        //To send user to Login Activity
-        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(loginIntent);
-    }
-
-
-//    public void getAllActivities(){
-//        String url = "https://api.smashrun.com/v1/my/activities";
-//        String token = getSharedPref().getString("token", "");
-//        String auth = getSharedPref().getString("auth", "");
-//        String response = "";
-//        okhttp3.Request request = new okhttp3.Request.Builder()
-//                .url(url)
-//                .addHeader("Authorization", "Bearer " + token)
-//                .build();
-//        Log.d("built request", "success");
-//        Log.d("request", request.toString());
-//        getOkHttpClient().newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-//                e.printStackTrace();
-//                Log.d("onFailure", "failure");
-//            }
-//
-//            @Override
-//            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-//                Log.d("onResponse", "entered");
-//                if (response.isSuccessful()) {
-//                    Log.d("onResponse", "success");
-//                    final String myResponse = response.body().string();
-//                    Log.d("Response", myResponse);
-//
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Log.d("Response", myResponse);
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//
-//    }
 
 
 }
