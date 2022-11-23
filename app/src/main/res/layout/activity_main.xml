@@ -67,7 +67,9 @@
         android:fitsSystemWindows="true"
         android:layout_marginTop="@dimen/abc_action_bar_default_height_material"
         android:background="@color/background"
+        app:headerLayout="@layout/header_navigation_drawer"
         app:itemTextColor="@color/textColorWhite"
-        app:menu="@menu/activity_main_drawer" />
+        app:itemIconTint="@color/colorPrimary"
+         />
 
 </androidx.drawerlayout.widget.DrawerLayout>

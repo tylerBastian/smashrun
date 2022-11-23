@@ -2,27 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group
+        android:id="@+id/header_divider">
+    </group>
+
+    <group
         android:id="@+id/top"
-        android:checkableBehavior="single">
+        android:checkableBehavior="single"
+        >
         <item
             android:id="@+id/nav_camera"
             android:title="Placeholder1" />
-    </group>
-
-    <group
-        android:id="@+id/middle"
-        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_share"
             android:title="Placeholder2" />
-    </group>
-
-    <group
-        android:id="@+id/bottom"
-        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_send"
             android:title="Placeholder3" />
+        <item
+            android:id="@+id/logout_drawer"
+            android:icon="@drawable/logout_icon_foreground"
+            android:title="Logout" />
     </group>
+
 
 </menu>

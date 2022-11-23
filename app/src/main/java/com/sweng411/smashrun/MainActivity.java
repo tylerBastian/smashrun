@@ -6,7 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -18,6 +21,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,6 +66,29 @@ public class MainActivity extends AppCompatActivity {
                 R.string.navigation_drawer_close);
         myDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        //Inflate menu so side navigation drawer buttons can be referenced in onCreate of initial launch
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        Menu menu = navigationView.getMenu();
+        getMenuInflater().inflate(R.menu.side_nav_drawer, menu);
+        menu.findItem(R.id.logout_drawer).setEnabled(true);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.logout_drawer:
+                        logout(findViewById(R.id.logout_drawer));
+                        break;
+                }
+                return true;
+            }
+        });
+
+        navigationView.getMenu().findItem(R.id.logout_drawer).setOnMenuItemClickListener(menuItem -> {
+            logout(findViewById(myDrawerLayout.getId()));
+            return true;
+        });
 
         homeFragment = new HomeFragment();
         //Bottom Navigation
@@ -195,6 +222,17 @@ public class MainActivity extends AppCompatActivity {
     }
     public static String getJsonString() {
         return jsonString;
+    }
+
+
+    public void logout(View view) {
+        SharedPreferences.Editor editor = getSharedPref().edit();
+        editor.putString("token", "");
+        editor.putString("auth", "");
+        editor.apply();
+        //This is to make it so you have to re input your login stuff on their webpage, mostly for testing purposes
+        clearCookies(view.getContext());
+        sendToLoginActivity();
     }
 
 
