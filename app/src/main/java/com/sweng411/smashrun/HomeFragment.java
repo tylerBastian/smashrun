@@ -5,6 +5,7 @@ import static com.sweng411.smashrun.MainActivity.getYearlyStatsJsonString;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -36,6 +38,8 @@ public class HomeFragment extends Fragment {
     private TextView yearSummaryText;
     private TextView yearSummaryDistance;
     private TextView yearSummaryRunCount;
+    private TextView yearAveragePace;
+    private TextView yearAverageRunLength;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -84,6 +88,8 @@ public class HomeFragment extends Fragment {
         yearSummaryText = view.findViewById(R.id.running_report_header);
         yearSummaryDistance = view.findViewById(R.id.running_report_distance);
         yearSummaryRunCount = view.findViewById(R.id.running_report_run_count);
+        yearAveragePace = view.findViewById(R.id.running_report_pace);
+        yearAverageRunLength = view.findViewById(R.id.running_report_avg_run_length);
 
         String text = String.format("%d Running Report", MainActivity.getYear());
         yearSummaryText.setText(text);
@@ -91,19 +97,45 @@ public class HomeFragment extends Fragment {
         String stats = getYearlyStatsJsonString();
         String totalDistance = null;
         String totalRunCount = null;
+        String averagePace = null;
+        String averageRunLength = null;
         try {
             JSONObject jsonObject = new JSONObject(stats);
+
             totalDistance = jsonObject.getString("totalDistance");
             totalDistance = String.format("%.2f", Double.parseDouble(totalDistance)*0.621371);
+
             totalRunCount = jsonObject.getString("runCount");
+
+            averagePace = jsonObject.getString("averagePace");
+            averagePace = minPerKmtoMinPerMile(averagePace);
+
+            averageRunLength = jsonObject.getString("averageRunLength");
+            averageRunLength = String.format("%.2f", Double.parseDouble(averageRunLength)*0.621371);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         yearSummaryRunCount.setText(String.format("Total runs: %s", totalRunCount));
         yearSummaryDistance.setText(String.format("Total miles run: %s ", totalDistance));
+        yearAveragePace.setText(String.format("Average pace: %s min/mi", averagePace));
+        yearAverageRunLength.setText(String.format("Average run length: %s mi", averageRunLength));
 
         return view;
+    }
+
+    //SimpleDateFormat sdf = new SimpleDateFormat("min:sec");
+
+    private String minPerKmtoMinPerMile(String minKm) {
+        String[] minKmArray = minKm.split(":");
+        int min = Integer.parseInt(minKmArray[0]);
+        int sec = Integer.parseInt(minKmArray[1]);
+        double minMile = min + (sec/60.0);
+        minMile = minMile*1.60934;
+        int minMileInt = (int) minMile;
+        int secMile = (int) ((minMile - minMileInt)*60);
+        return String.format("%d:%d", minMileInt, secMile);
     }
 
 

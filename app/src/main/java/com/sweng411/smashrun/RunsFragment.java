@@ -158,7 +158,7 @@ public class RunsFragment extends Fragment {
 
                 String date = itemObj.getString("startDateTimeLocal");
                 Date dateObj = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
-                String dateStr = new SimpleDateFormat("MM/dd/yyyy").format(dateObj);
+                String dateStr = new SimpleDateFormat("MM/dd/yy").format(dateObj);
                 date = dateStr;
                 Log.d("date", date);
 

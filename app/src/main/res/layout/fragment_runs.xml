@@ -26,7 +26,7 @@
                 android:textColor="@color/textColorWhite"
                 android:text="Date"
                 android:textAlignment="center"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 />
 
@@ -38,7 +38,7 @@
                 android:textColor="@color/textColorWhite"
                 android:textAlignment="center"
                 android:text="Distance"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 />
             <TextView
@@ -49,7 +49,7 @@
                 android:textColor="@color/textColorWhite"
                 android:textAlignment="center"
                 android:text="Calories"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 />
             <TextView
@@ -60,7 +60,7 @@
                 android:textColor="@color/textColorWhite"
                 android:textAlignment="center"
                 android:text="Duration"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 />
             <TextView
@@ -71,7 +71,7 @@
                 android:textColor="@color/textColorWhite"
                 android:textAlignment="center"
                 android:text="Pace"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 />
         </TableRow>
