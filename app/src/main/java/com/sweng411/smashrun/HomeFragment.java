@@ -1,26 +1,24 @@
 package com.sweng411.smashrun;
 
-import static com.sweng411.smashrun.MainActivity.clearCookies;
-import static com.sweng411.smashrun.MainActivity.getOkHttpClient;
-import static com.sweng411.smashrun.MainActivity.getSharedPref;
+import static com.sweng411.smashrun.MainActivity.getAllActivitiesJsonString;
+import static com.sweng411.smashrun.MainActivity.getYearlyStatsJsonString;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import java.io.IOException;
+import com.google.android.material.card.MaterialCardView;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +31,11 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private MaterialCardView yearSummaryCard;
+    private TextView yearSummaryText;
+    private TextView yearSummaryDistance;
+    private TextView yearSummaryRunCount;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -69,6 +72,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -76,8 +80,33 @@ public class HomeFragment extends Fragment {
 
         getActivity().setTitle("Overview");
 
+        yearSummaryCard = view.findViewById(R.id.running_report_card);
+        yearSummaryText = view.findViewById(R.id.running_report_header);
+        yearSummaryDistance = view.findViewById(R.id.running_report_distance);
+        yearSummaryRunCount = view.findViewById(R.id.running_report_run_count);
+
+        String text = String.format("%d Running Report", MainActivity.getYear());
+        yearSummaryText.setText(text);
+
+        String stats = getYearlyStatsJsonString();
+        String totalDistance = null;
+        String totalRunCount = null;
+        try {
+            JSONObject jsonObject = new JSONObject(stats);
+            totalDistance = jsonObject.getString("totalDistance");
+            totalDistance = String.format("%.2f", Double.parseDouble(totalDistance)*0.621371);
+            totalRunCount = jsonObject.getString("runCount");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        yearSummaryRunCount.setText(String.format("Total runs: %s", totalRunCount));
+        yearSummaryDistance.setText(String.format("Total miles run: %s ", totalDistance));
+
         return view;
     }
+
+
 
 
 }

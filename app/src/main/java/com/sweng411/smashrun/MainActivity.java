@@ -1,5 +1,7 @@
 package com.sweng411.smashrun;
 
+import static java.lang.Thread.sleep;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +26,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.Call;
@@ -44,17 +47,34 @@ public class MainActivity extends AppCompatActivity {
 
     private static SharedPreferences sharedPref;
     private static boolean listLoaded = false;
-    private static String jsonString;
+    private static String allActivitiesJsonString;
+    private static String yearlyStatsJsonString;
+    private boolean activitiesLoaded = false;
+    private boolean yearlyStatsLoaded = false;
+    private static Calendar calendar;
+    private static int year;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
         sharedPref = getSharedPreferences("com.sweng411.smashrun", Context.MODE_PRIVATE);
         setContentView(R.layout.activity_main);
 
         protocols.add(Protocol.HTTP_1_1);
         okHttpClient = new OkHttpClient.Builder().protocols(protocols).build();
+        //Call api, load activities into json string
+        getAllActivities();
+        while(!activitiesLoaded){
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        getYearlyStats();
 
         //Toolbar and Navigation Drawer
         myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -89,6 +109,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        //Can't inflate inflate fragments until after api call to activities returns, probably a better way to do this
+        while(!yearlyStatsLoaded){
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         homeFragment = new HomeFragment();
         //Bottom Navigation
         bottomNavigationView = findViewById(R.id.bottom_nav_view);
@@ -117,9 +145,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        //Call api, load activities into json string
-        getAllActivities();
 
     }
 
@@ -193,14 +218,54 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("onResponse", "entered");
                 if (response.isSuccessful()) {
                     Log.d("onResponse", "success");
-                    setJsonString(response.body().string());
-                    Log.d("Response", getJsonString());
-                    Log.d("returnString", getJsonString());
+                    setAllActivitiesJsonString(response.body().string());
+                    activitiesLoaded = true;
+                    Log.d("Response", getAllActivitiesJsonString());
+                    Log.d("returnString", getAllActivitiesJsonString());
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("Response", getJsonString() + " in run");
+                            Log.d("Response", getAllActivitiesJsonString() + " in run");
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    //Get yearly stats
+    private void getYearlyStats(){
+        String url = "https://api.smashrun.com/v1/my/stats/" + String.valueOf(getYear());
+        String token = getSharedPref().getString("token", "");
+        String auth = getSharedPref().getString("auth", "");
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+        Log.d("built request", "success");
+        Log.d("request", request.toString());
+        getOkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                Log.d("onFailure", "failure");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("onResponse", "entered");
+                if (response.isSuccessful()) {
+                    Log.d("onResponse", "success");
+                    setYearlyStatsJsonString(response.body().string());
+                    yearlyStatsLoaded = true;
+                    Log.d("Response", getYearlyStatsJsonString());
+                    Log.d("returnString", getYearlyStatsJsonString());
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("Response", getAllActivitiesJsonString() + " in run");
                         }
                     });
                 }
@@ -216,13 +281,22 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isListLoaded() {
         return listLoaded;
     }
-    public static void setJsonString(String jsonString) {
-        MainActivity.jsonString = jsonString;
+    public static void setAllActivitiesJsonString(String allActivitiesJsonString) {
+        MainActivity.allActivitiesJsonString = allActivitiesJsonString;
     }
-    public static String getJsonString() {
-        return jsonString;
+    public static void setYearlyStatsJsonString(String yearlyStatsJsonString) {
+        MainActivity.yearlyStatsJsonString = yearlyStatsJsonString;
+    }
+    public static String getAllActivitiesJsonString() {
+        return allActivitiesJsonString;
+    }
+    public static String getYearlyStatsJsonString() {
+        return yearlyStatsJsonString;
     }
 
+    public static int getYear() {
+        return year;
+    }
 
     public void logout(View view) {
         SharedPreferences.Editor editor = getSharedPref().edit();

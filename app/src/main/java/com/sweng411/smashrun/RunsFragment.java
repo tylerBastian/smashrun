@@ -1,6 +1,6 @@
 package com.sweng411.smashrun;
 
-import static com.sweng411.smashrun.MainActivity.getJsonString;
+import static com.sweng411.smashrun.MainActivity.getAllActivitiesJsonString;
 
 import static java.lang.Thread.sleep;
 
@@ -101,7 +101,7 @@ public class RunsFragment extends Fragment {
 
         getActivity().setTitle("Recent Runs");
 
-        addItemsFromJSON(getJsonString());
+        addItemsFromJSON(getAllActivitiesJsonString());
 
         return view;
     }
@@ -129,14 +129,14 @@ public class RunsFragment extends Fragment {
 //                Log.d("onResponse", "entered");
 //                if (response.isSuccessful()) {
 //                    Log.d("onResponse", "success");
-//                    setJsonString(response.body().string());
-//                    Log.d("Response", getJsonString());
-//                    Log.d("returnString", getJsonString());
+//                    setAllActivitiesJsonString(response.body().string());
+//                    Log.d("Response", getAllActivitiesJsonString());
+//                    Log.d("returnString", getAllActivitiesJsonString());
 //
 //                    getActivity().runOnUiThread(new Runnable() {
 //                        @Override
 //                        public void run() {
-//                            Log.d("Response", getJsonString() + " in run");
+//                            Log.d("Response", getAllActivitiesJsonString() + " in run");
 //                        }
 //                    });
 //                }
