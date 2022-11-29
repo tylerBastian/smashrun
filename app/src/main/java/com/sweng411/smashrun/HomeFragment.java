@@ -4,6 +4,8 @@ import static com.sweng411.smashrun.MainActivity.getAllActivitiesJsonString;
 import static com.sweng411.smashrun.MainActivity.getYearlyStatsJsonString;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -13,6 +15,11 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.google.android.material.card.MaterialCardView;
 
 import org.json.JSONArray;
@@ -20,7 +27,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +50,7 @@ public class HomeFragment extends Fragment {
     private TextView yearSummaryRunCount;
     private TextView yearAveragePace;
     private TextView yearAverageRunLength;
+    private PieChart runTimePieChart;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -90,6 +101,7 @@ public class HomeFragment extends Fragment {
         yearSummaryRunCount = view.findViewById(R.id.running_report_run_count);
         yearAveragePace = view.findViewById(R.id.running_report_pace);
         yearAverageRunLength = view.findViewById(R.id.running_report_avg_run_length);
+        runTimePieChart = view.findViewById(R.id.time_run_pie_chart);
 
         String text = String.format("%d Running Report", MainActivity.getYear());
         yearSummaryText.setText(text);
@@ -99,6 +111,8 @@ public class HomeFragment extends Fragment {
         String totalRunCount = null;
         String averagePace = null;
         String averageRunLength = null;
+        int AmRuns = 0;
+        int PmRuns = 0;
         try {
             JSONObject jsonObject = new JSONObject(stats);
 
@@ -113,6 +127,10 @@ public class HomeFragment extends Fragment {
             averageRunLength = jsonObject.getString("averageRunLength");
             averageRunLength = String.format("%.2f", Double.parseDouble(averageRunLength)*0.621371);
 
+            AmRuns = jsonObject.getInt("daysRunAM");
+            PmRuns = jsonObject.getInt("daysRunPM");
+            showPieChart(AmRuns, PmRuns);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -125,7 +143,6 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    //SimpleDateFormat sdf = new SimpleDateFormat("min:sec");
 
     private String minPerKmtoMinPerMile(String minKm) {
         String[] minKmArray = minKm.split(":");
@@ -136,6 +153,50 @@ public class HomeFragment extends Fragment {
         int minMileInt = (int) minMile;
         int secMile = (int) ((minMile - minMileInt)*60);
         return String.format("%d:%d", minMileInt, secMile);
+    }
+
+    private void showPieChart(int amRuns, int pmRuns) {
+        String label = "type";
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        Map<String, Integer> timeOfDayMap = new HashMap<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.parseColor("#FF8D60"));
+        colors.add(Color.parseColor("#FF6122"));
+
+        int totalAmRuns = amRuns;
+        int totalPmRuns = pmRuns;
+        timeOfDayMap.put("AM", totalAmRuns);
+        timeOfDayMap.put("PM", totalPmRuns);
+
+        for(String type: timeOfDayMap.keySet()){
+            pieEntries.add(new PieEntry(timeOfDayMap.get(type), type));
+        }
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
+
+        //setting text size of the value
+        pieDataSet.setValueTextSize(12f);
+        pieDataSet.setValueTextColor(Color.parseColor("#EFEFEF"));
+        pieDataSet.setValueTypeface(Typeface.DEFAULT_BOLD);
+        //providing color list for coloring different entries
+        pieDataSet.setColors(colors);
+        //grouping the data set from entry to chart
+        PieData pieData = new PieData(pieDataSet);
+        //showing the value of the entries, default true if not set
+        pieData.setDrawValues(true);
+        pieData.setValueFormatter(new PercentFormatter(runTimePieChart));
+
+        runTimePieChart.setUsePercentValues(true);
+        runTimePieChart.getDescription().setEnabled(false);
+        runTimePieChart.setCenterText("Run Time of Day");
+        runTimePieChart.setCenterTextSize(12);
+        runTimePieChart.getLegend().setEnabled(false);
+        runTimePieChart.setHoleRadius(40f);
+        runTimePieChart.setHoleColor(Color.parseColor("#EFEFEF"));
+        runTimePieChart.setTransparentCircleRadius(45f);
+
+        runTimePieChart.setData(pieData);
+        runTimePieChart.invalidate();
     }
 
 

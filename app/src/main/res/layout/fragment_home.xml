@@ -23,7 +23,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/running_report_header"
@@ -98,6 +98,15 @@
                 android:textColor="@color/textColorWhite"
                 android:textSize="17sp">
             </TextView>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/time_run_pie_chart"
+                android:layout_width="195dp"
+                android:layout_height="156dp"
+                android:layout_below="@+id/running_report_header"
+                android:layout_marginLeft="87dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@id/running_report_run_count" />
 
         </RelativeLayout>
 
