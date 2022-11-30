@@ -104,9 +104,62 @@
                 android:layout_width="195dp"
                 android:layout_height="156dp"
                 android:layout_below="@+id/running_report_header"
-                android:layout_marginLeft="87dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginLeft="93dp"
+                android:layout_marginTop="2dp"
                 android:layout_toRightOf="@id/running_report_run_count" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/distance_per_month_card"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="5dp"
+        android:layout_marginTop="266dp"
+        android:layout_marginBottom="387dp"
+        android:padding="5dp"
+        app:cardBackgroundColor="@color/listCardBackground"
+        app:cardCornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.393"
+        tools:layout_editor_absoluteX="-7dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/distance_per_month_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_centerInParent="true"
+                android:layout_alignParentTop="true"
+                android:text="Distance Per Month (mi)"
+                android:textColor="@color/textColorWhite"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textAlignment="center">
+            </TextView>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/distance_per_month_bar_chart"
+                android:layout_below="@id/distance_per_month_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:padding="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp" />
 
         </RelativeLayout>
 

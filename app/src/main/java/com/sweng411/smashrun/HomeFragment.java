@@ -6,8 +6,10 @@ import static com.sweng411.smashrun.MainActivity.getYearlyStatsJsonString;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +17,18 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.google.android.material.card.MaterialCardView;
 
@@ -26,11 +36,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +70,15 @@ public class HomeFragment extends Fragment {
     private TextView yearAveragePace;
     private TextView yearAverageRunLength;
     private PieChart runTimePieChart;
+    private BarChart distancePerMonthBarChart;
+    private String totalDistance;
+    private String totalRunCount;
+    private String averagePace;
+    private String averageRunLength;
+    private int AmRuns;
+    private int PmRuns;
+    private String stats;
+    private List<String> last12Months;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -102,17 +130,13 @@ public class HomeFragment extends Fragment {
         yearAveragePace = view.findViewById(R.id.running_report_pace);
         yearAverageRunLength = view.findViewById(R.id.running_report_avg_run_length);
         runTimePieChart = view.findViewById(R.id.time_run_pie_chart);
+        distancePerMonthBarChart = view.findViewById(R.id.distance_per_month_bar_chart);
 
         String text = String.format("%d Running Report", MainActivity.getYear());
         yearSummaryText.setText(text);
 
-        String stats = getYearlyStatsJsonString();
-        String totalDistance = null;
-        String totalRunCount = null;
-        String averagePace = null;
-        String averageRunLength = null;
-        int AmRuns = 0;
-        int PmRuns = 0;
+        stats = getYearlyStatsJsonString();
+
         try {
             JSONObject jsonObject = new JSONObject(stats);
 
@@ -130,8 +154,9 @@ public class HomeFragment extends Fragment {
             AmRuns = jsonObject.getInt("daysRunAM");
             PmRuns = jsonObject.getInt("daysRunPM");
             showPieChart(AmRuns, PmRuns);
+            showDistancePerMonthBarChart();
 
-        } catch (JSONException e) {
+        } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
 
@@ -140,8 +165,11 @@ public class HomeFragment extends Fragment {
         yearAveragePace.setText(String.format("Average pace: %s min/mi", averagePace));
         yearAverageRunLength.setText(String.format("Average run length: %s mi", averageRunLength));
 
+        getDistancePerMonth(MainActivity.getAllActivitiesJsonString());
+
         return view;
     }
+
 
 
     private String minPerKmtoMinPerMile(String minKm) {
@@ -190,6 +218,7 @@ public class HomeFragment extends Fragment {
         runTimePieChart.getDescription().setEnabled(false);
         runTimePieChart.setCenterText("Run Time of Day");
         runTimePieChart.setCenterTextSize(12);
+        runTimePieChart.setCenterTextTypeface(Typeface.DEFAULT_BOLD);
         runTimePieChart.getLegend().setEnabled(false);
         runTimePieChart.setHoleRadius(40f);
         runTimePieChart.setHoleColor(Color.parseColor("#EFEFEF"));
@@ -197,9 +226,179 @@ public class HomeFragment extends Fragment {
 
         runTimePieChart.setData(pieData);
         runTimePieChart.invalidate();
+
+        runTimePieChart.animateY(1000, Easing.EaseInOutQuad);
+    }
+
+    private void showDistancePerMonthBarChart() throws ParseException {
+        Map<String, Double> distancePerMonthMap = getDistancePerMonth(MainActivity.getAllActivitiesJsonString());
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        ArrayList<String> labels = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.parseColor("#FF8D60"));
+        colors.add(Color.parseColor("#FF6122"));
+        colors.add(Color.parseColor("#FF8D60"));
+        colors.add(Color.parseColor("#FF6122"));
+        colors.add(Color.parseColor("#FF8D60"));
+        colors.add(Color.parseColor("#FF6122"));
+        colors.add(Color.parseColor("#FF8D60"));
+        colors.add(Color.parseColor("#FF6122"));
+        colors.add(Color.parseColor("#FF8D60"));
+        colors.add(Color.parseColor("#FF6122"));
+        colors.add(Color.parseColor("#FF8D60"));
+        colors.add(Color.parseColor("#FF6122"));
+
+        int i = 0;
+        for(String month: distancePerMonthMap.keySet()){
+            barEntries.add(new BarEntry(i, distancePerMonthMap.get(month).floatValue()));
+            SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM");
+            SimpleDateFormat targetFormat = new SimpleDateFormat("MMM");
+            Date date = originalFormat.parse(month);
+            String formattedDate = targetFormat.format(date);
+            labels.add(formattedDate);
+            i++;
+        }
+        Log.d("labels", labels.toString());
+
+        BarDataSet barDataSet = new BarDataSet(barEntries, "Distance");
+        barDataSet.setColors(colors);
+        BarData barData = new BarData(barDataSet);
+        barData.setBarWidth(0.9f);
+        barData.setValueTextSize(12f);
+        barData.setValueTextColor(Color.parseColor("#EFEFEF"));
+        barData.setValueTypeface(Typeface.DEFAULT_BOLD);
+        distancePerMonthBarChart.setData(barData);
+        distancePerMonthBarChart.setFitBars(true);
+        distancePerMonthBarChart.getDescription().setEnabled(false);
+        distancePerMonthBarChart.getLegend().setEnabled(false);
+        distancePerMonthBarChart.setDrawGridBackground(false);
+        distancePerMonthBarChart.setDrawBorders(false);
+        distancePerMonthBarChart.setDrawValueAboveBar(true);
+        distancePerMonthBarChart.setDrawBarShadow(false);
+
+        XAxis xAxis = distancePerMonthBarChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setGranularity(1f);
+        xAxis.setGranularityEnabled(true);
+        xAxis.setLabelCount(labels.size());
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+        xAxis.setTextColor(Color.parseColor("#EFEFEF"));
+        xAxis.setTypeface(Typeface.DEFAULT_BOLD);
+        xAxis.setTextSize(12f);
+
+        YAxis yAxisLeft = distancePerMonthBarChart.getAxisLeft();
+        yAxisLeft.setDrawGridLines(false);
+        yAxisLeft.setDrawAxisLine(false);
+        yAxisLeft.setDrawLabels(false);
+        yAxisLeft.setDrawZeroLine(false);
+        yAxisLeft.setDrawTopYLabelEntry(false);
+        yAxisLeft.setDrawLimitLinesBehindData(false);
+        yAxisLeft.setDrawGridLinesBehindData(false);
+        yAxisLeft.setDrawAxisLine(false);
+        yAxisLeft.setDrawLabels(false);
+        yAxisLeft.setDrawZeroLine(false);
+        yAxisLeft.setDrawTopYLabelEntry(false);
+        yAxisLeft.setDrawLimitLinesBehindData(false);
+        yAxisLeft.setDrawGridLinesBehindData(false);
+
+        YAxis yAxisRight = distancePerMonthBarChart.getAxisRight();
+        yAxisRight.setDrawGridLines(false);
+        yAxisRight.setDrawAxisLine(false);
+        yAxisRight.setDrawLabels(false);
+        yAxisRight.setDrawZeroLine(false);
+        yAxisRight.setDrawTopYLabelEntry(false);
+        yAxisRight.setDrawLimitLinesBehindData(false);
+        yAxisRight.setDrawGridLinesBehindData(false);
+        yAxisRight.setDrawAxisLine(false);
+        yAxisRight.setDrawLabels(false);
+        yAxisRight.setDrawZeroLine(false);
+        yAxisRight.setDrawTopYLabelEntry(false);
+        yAxisRight.setDrawLimitLinesBehindData(false);
+        yAxisRight.setDrawGridLinesBehindData(false);
+
+        distancePerMonthBarChart.invalidate();
+        distancePerMonthBarChart.animateY(1000, Easing.EaseInOutQuad);
+
     }
 
 
+    private List<String> getLast12Months() {
+        final int monthsInYear = 12;
+        YearMonth currentMonth = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            currentMonth = YearMonth.now(ZoneId.of("America/New_York"));
+        }
+        YearMonth sameMonthLastYear = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            sameMonthLastYear = currentMonth.minusYears(1);
+        }
+        List<YearMonth> months = new ArrayList<>(monthsInYear);
+        for (int i = 1; i <= monthsInYear; i++) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                months.add(sameMonthLastYear.plusMonths(i));
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.d("months", months.toString());
+            return months.stream().map(YearMonth::toString).collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    private Map<String, Double> getDistancePerMonth(String json) {
+        Map<String, Double> distancePerMonthMap = null;
+        try {
+            last12Months = getLast12Months();
+            distancePerMonthMap = new HashMap<>();
+            boolean withinLast12Months = true;
+            String jsonDataString = json;
+            JSONArray jsonArray = new JSONArray(jsonDataString);
+            int index = 0;
+
+            while (withinLast12Months) {
+
+                JSONObject itemObj = jsonArray.getJSONObject(index);
+
+                String date = itemObj.getString("startDateTimeLocal");
+                String[] dateArray = date.split("-");
+                String yearMonth = dateArray[0] + "-" + dateArray[1];
+
+                if (last12Months.contains(yearMonth)) {
+                    String distanceStr = itemObj.getString("distance");
+                    double distance = Double.parseDouble(distanceStr) * 0.621371;
+                    if (distancePerMonthMap.containsKey(yearMonth)) {
+                        distancePerMonthMap.put(yearMonth, distancePerMonthMap.get(yearMonth) + distance);
+                    } else {
+                        distancePerMonthMap.put(yearMonth, distance);
+                    }
+                } else {
+                    withinLast12Months = false;
+                }
+
+                index++;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        distancePerMonthMap = sortByKey(distancePerMonthMap);
+        Log.d("distancePerMonthMap", distancePerMonthMap.toString());
+        return distancePerMonthMap;
+    }
+
+    private Map<String, Double> sortByKey(Map<String, Double> distancePerMonthMap) {
+        Map<String, Double> sortedMap = new LinkedHashMap<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            distancePerMonthMap.entrySet()
+                    .stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
+        }
+        return sortedMap;
+    }
 
 
 }
