@@ -27,23 +27,24 @@ import okhttp3.Response;
 
 import androidx.lifecycle.LiveData;
 
+
+//Uses Singleton pattern, only needs to be one and is easy way to access it
 public class UserRunRepository {
     private static final UserRunRepository instance = new UserRunRepository();
 
-
     private OkHttpClient httpClient;
-
 
     private UserRunRepository() {
         httpClient = new OkHttpClient();
-
     }
+
 
     public static UserRunRepository GetInstance() {
         return instance;
     }
 
 
+    //Gets All Runs of a user, can be changed to take a parameter for only a certain amount
     public void GetRuns(com.sweng411.smashrun.Callback<ArrayList<Run>> callback) {
         String url = "https://api.smashrun.com/v1/my/activities";
         String token = getSharedPref().getString("token", "");
@@ -52,8 +53,6 @@ public class UserRunRepository {
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
 
-        Log.d("built request", "success");
-        Log.d("request", request.toString());
 
         ArrayList<Run> runList = new ArrayList<>();
 
@@ -81,7 +80,8 @@ public class UserRunRepository {
                     }
 
                 }
-                Log.d("UserRunRepo", String.valueOf(runList.size()));
+
+                //This calls the ViewModel back to let it know it can use the data
                 callback.HandleRepoData(runList);
 
             }
@@ -89,6 +89,7 @@ public class UserRunRepository {
 
 
     }
+
 
     Run CreateUserRunFromJson(JSONObject userRunJson) {
         Run userRun = new Run();

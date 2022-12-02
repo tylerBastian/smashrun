@@ -76,7 +76,8 @@ public class RunsFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(RunViewModel.class);
 
 
-        //Pulls runs from View Model
+        //Pulls LiveDataRuns from View Model and observes changes to variable, when changed it updates UI
+        //That way you dont need to pull the data before you attempt to display
         viewModel.GetUserRuns().observe(this, (List<UserRunUiState> userRuns) -> {
             initRecyclerView(userRuns);
         });
@@ -96,7 +97,7 @@ public class RunsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_runs, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recentRunsList);
+        mRecyclerView = view.findViewById(R.id.recentRunsList);
 
 
         getActivity().setTitle("Recent Runs");
@@ -104,6 +105,7 @@ public class RunsFragment extends Fragment {
 
         return view;
     }
+
 
     private void initRecyclerView(List<UserRunUiState> runs) {
         //Sets up the data when it is received from the ViewModel

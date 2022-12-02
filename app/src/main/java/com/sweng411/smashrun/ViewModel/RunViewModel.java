@@ -22,9 +22,13 @@ public class RunViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
     public LiveData<List<UserRunUiState>> GetUserRuns() {
+
+        //Grabs data from repo using a callback
         repository.GetRuns(runs -> {
             ArrayList<UserRunUiState> states = new ArrayList<>();
             Log.d("RunViewModel", String.valueOf(runs.size()));
+
+            //Takes data from Repo and transforms it into what the UI consumes
             for (Run run :
                     runs) {
                 UserRunUiState state = new UserRunUiState();
@@ -35,9 +39,12 @@ public class RunViewModel extends ViewModel {
                 state.date = String.valueOf(run.Date);
                 states.add(state);
             }
+
+            //Live data is a way to update UI after it received the initial variable
             userLiveData.postValue(states);
         });
 
+        //Returns initial live data variable for UI to consume
         return userLiveData;
     }
 
