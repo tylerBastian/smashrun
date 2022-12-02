@@ -4,11 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.sweng411.smashrun.Model.Run;
+import com.sweng411.smashrun.State.RunsUiState;
+import com.sweng411.smashrun.State.UserRunUiState;
 
 import java.util.List;
 
@@ -18,9 +21,9 @@ public class RunListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private static final int TYPE = 1;
     private final Context context;
-    private final List<Object> listRecyclerItem;
+    private final List<UserRunUiState> listRecyclerItem;
 
-    public RunListAdapter(Context context, List<Object> listRecyclerItem) {
+    public RunListAdapter(Context context, List<UserRunUiState> listRecyclerItem) {
         this.context = context;
         this.listRecyclerItem = listRecyclerItem;
     }
@@ -69,13 +72,13 @@ public class RunListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case TYPE:
             default:
                 ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
-                Runs runs = (Runs) listRecyclerItem.get(i);
+                UserRunUiState run = listRecyclerItem.get(i);
 
-                itemViewHolder.date.setText(runs.getDate());
-                itemViewHolder.distance.setText(runs.getDistance());
-                itemViewHolder.pace.setText(runs.getPace());
-                itemViewHolder.calories.setText(runs.getCalories());
-                itemViewHolder.duration.setText(runs.getDuration());
+                itemViewHolder.date.setText(run.date);
+                itemViewHolder.distance.setText(run.distance);
+                itemViewHolder.pace.setText(run.pace);
+                itemViewHolder.calories.setText(run.calories);
+                itemViewHolder.duration.setText(run.duration);
         }
 
     }

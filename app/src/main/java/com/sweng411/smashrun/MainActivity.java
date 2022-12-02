@@ -19,6 +19,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -65,15 +66,24 @@ public class MainActivity extends AppCompatActivity {
 
         protocols.add(Protocol.HTTP_1_1);
         okHttpClient = new OkHttpClient.Builder().protocols(protocols).build();
+
+
         //Call api, load activities into json string
-        getAllActivities();
-        while(!activitiesLoaded){
-            try {
-                sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        String token = sharedPref.getString("token", "");
+        Log.d("Auth", "Token from Main: " + token);
+
+        if (token.equals("")) {
+            sendToLoginActivity();
         }
+
+        getAllActivities();
         getYearlyStats();
 
         //Toolbar and Navigation Drawer
@@ -109,14 +119,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        //Can't inflate inflate fragments until after api call to activities returns, probably a better way to do this
-        while(!yearlyStatsLoaded){
-            try {
-                sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+
         homeFragment = new HomeFragment();
         //Bottom Navigation
         bottomNavigationView = findViewById(R.id.bottom_nav_view);
@@ -148,20 +151,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        String token = sharedPref.getString("token", "");
-        Log.d("Auth", "Token from Main: " + token);
 
-        if(token == "") {
-            sendToLoginActivity();
-        }
-
-    }
 
     private void sendToLoginActivity() {
-        //To send user to Login Activity
+        Log.d("Main", "Sending To Login Activity");
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(loginIntent);
     }
@@ -199,13 +192,14 @@ public class MainActivity extends AppCompatActivity {
     private void getAllActivities(){
         String url = "https://api.smashrun.com/v1/my/activities";
         String token = getSharedPref().getString("token", "");
-        String auth = getSharedPref().getString("auth", "");
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
+
         Log.d("built request", "success");
         Log.d("request", request.toString());
+
         getOkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {

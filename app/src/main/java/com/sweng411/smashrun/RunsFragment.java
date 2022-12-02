@@ -1,30 +1,27 @@
 package com.sweng411.smashrun;
 
-import static com.sweng411.smashrun.MainActivity.getAllActivitiesJsonString;
-
 import static java.lang.Thread.sleep;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.sweng411.smashrun.Model.Run;
+import com.sweng411.smashrun.State.RunsUiState;
+import com.sweng411.smashrun.State.UserRunUiState;
+import com.sweng411.smashrun.ViewModel.RunViewModel;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,8 +38,8 @@ public class RunsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private List<Object> viewItems = new ArrayList<>();
 
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+
+    private RunViewModel viewModel;
 
     private static final String TAG = "ListFragment";
     //private String jsonString;
@@ -76,116 +73,53 @@ public class RunsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(RunViewModel.class);
+
+
+        //Pulls runs from View Model
+        viewModel.GetUserRuns().observe(this, (List<UserRunUiState> userRuns) -> {
+            initRecyclerView(userRuns);
+        });
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_runs, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recentRunsList);
-        mRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
-        layoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(layoutManager);
-
-        // specify an adapter (see also next example)
-        mAdapter = new RunListAdapter(getContext(), viewItems);
-        mRecyclerView.setAdapter(mAdapter);
 
         getActivity().setTitle("Recent Runs");
 
-        addItemsFromJSON(getAllActivitiesJsonString());
 
         return view;
     }
 
+    private void initRecyclerView(List<UserRunUiState> runs) {
+        //Sets up the data when it is received from the ViewModel
+        Log.d(TAG, "Init Recycler View");
 
-    //get 10 most recent activities
-//    public void getRecentActivities(){
-//        String url = "https://api.smashrun.com/v1/my/activities/search?page=0&count=10";
-//        String token = getSharedPref().getString("token", "");
-//        String auth = getSharedPref().getString("auth", "");
-//        okhttp3.Request request = new okhttp3.Request.Builder()
-//                .url(url)
-//                .addHeader("Authorization", "Bearer " + token)
-//                .build();
-//        Log.d("request", request.toString());
-//        getOkHttpClient().newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-//                e.printStackTrace();
-//                Log.d("onFailure", "failure");
-//            }
-//
-//            @Override
-//            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-//                Log.d("onResponse", "entered");
-//                if (response.isSuccessful()) {
-//                    Log.d("onResponse", "success");
-//                    setAllActivitiesJsonString(response.body().string());
-//                    Log.d("Response", getAllActivitiesJsonString());
-//                    Log.d("returnString", getAllActivitiesJsonString());
-//
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Log.d("Response", getAllActivitiesJsonString() + " in run");
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//
-//    }
-
-
-    //Display 20 most recent runs
-    private void addItemsFromJSON(String json) {
-        try {
-            String jsonDataString = json;
-            JSONArray jsonArray = new JSONArray(jsonDataString);
-
-            for (int i=0; i<20; ++i) {
-
-                JSONObject itemObj = jsonArray.getJSONObject(i);
-
-                String date = itemObj.getString("startDateTimeLocal");
-                Date dateObj = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
-                String dateStr = new SimpleDateFormat("MM/dd/yy").format(dateObj);
-                date = dateStr;
-                Log.d("date", date);
-
-                String distance = itemObj.getString("distance");
-                distance = String.format("%.2f", Double.parseDouble(distance)*0.621371);
-                Log.d("distance", distance);
-
-                String duration = itemObj.getString("duration");
-                String durationStr = DateUtils.formatElapsedTime((long) Double.parseDouble(duration));
-                Log.d("duration", durationStr);
-
-                String pace = String.valueOf(Double.parseDouble(duration) / Double.parseDouble(distance));
-                String paceStr = DateUtils.formatElapsedTime((long) Double.parseDouble(pace));
-                Log.d("pace", pace);
-
-                String calories = itemObj.getString("calories");
-                Log.d("calories", calories);
-
-                Runs runs = new Runs(date, distance, durationStr, paceStr, calories);
-                viewItems.add(runs);
-            }
-
-        } catch (JSONException e) {
-            Log.d(TAG, "addItemsFromJSON: ", e);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        RunListAdapter mAdapter = new RunListAdapter(getContext(), runs);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
+
+    //get 10 most recent activities
+//        String url = "https://api.smashrun.com/v1/my/activities/search?page=0&count=10";
+
+
 }
+
