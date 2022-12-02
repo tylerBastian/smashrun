@@ -6,4 +6,5 @@ public class Run {
     public float Distance;
     public int Calories;
     public String Date;
+
 }

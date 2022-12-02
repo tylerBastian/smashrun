@@ -36,7 +36,6 @@ public class RunsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private RecyclerView mRecyclerView;
-    private List<Object> viewItems = new ArrayList<>();
 
 
     private RunViewModel viewModel;

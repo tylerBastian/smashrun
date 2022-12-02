@@ -83,9 +83,6 @@ public class MainActivity extends AppCompatActivity {
             sendToLoginActivity();
         }
 
-        getAllActivities();
-        getYearlyStats();
-
         //Toolbar and Navigation Drawer
         myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -189,83 +186,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void getAllActivities(){
-        String url = "https://api.smashrun.com/v1/my/activities";
-        String token = getSharedPref().getString("token", "");
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url)
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
 
-        Log.d("built request", "success");
-        Log.d("request", request.toString());
 
-        getOkHttpClient().newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-                Log.d("onFailure", "failure");
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.d("onResponse", "entered");
-                if (response.isSuccessful()) {
-                    Log.d("onResponse", "success");
-                    setAllActivitiesJsonString(response.body().string());
-                    activitiesLoaded = true;
-                    Log.d("Response", getAllActivitiesJsonString());
-                    Log.d("returnString", getAllActivitiesJsonString());
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.d("Response", getAllActivitiesJsonString() + " in run");
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    //Get yearly stats
-    private void getYearlyStats(){
-        String url = "https://api.smashrun.com/v1/my/stats/" + String.valueOf(getYear());
-        String token = getSharedPref().getString("token", "");
-        String auth = getSharedPref().getString("auth", "");
-        okhttp3.Request request = new okhttp3.Request.Builder()
-                .url(url)
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
-        Log.d("built request", "success");
-        Log.d("request", request.toString());
-        getOkHttpClient().newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-                Log.d("onFailure", "failure");
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.d("onResponse", "entered");
-                if (response.isSuccessful()) {
-                    Log.d("onResponse", "success");
-                    setYearlyStatsJsonString(response.body().string());
-                    yearlyStatsLoaded = true;
-                    Log.d("Response", getYearlyStatsJsonString());
-                    Log.d("returnString", getYearlyStatsJsonString());
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.d("Response", getAllActivitiesJsonString() + " in run");
-                        }
-                    });
-                }
-            }
-        });
-    }
 
 
     //Managing ListFragment data, probably not the best way to do this

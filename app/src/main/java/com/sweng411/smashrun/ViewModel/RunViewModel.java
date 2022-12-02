@@ -1,23 +1,22 @@
 package com.sweng411.smashrun.ViewModel;
 
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.sweng411.smashrun.Callback;
 import com.sweng411.smashrun.Model.Run;
-import com.sweng411.smashrun.Repo.UserRunRepository;
-import com.sweng411.smashrun.State.RunsUiState;
+import com.sweng411.smashrun.Repo.SmashRunRepository;
 import com.sweng411.smashrun.State.UserRunUiState;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RunViewModel extends ViewModel {
-    private UserRunRepository repository = UserRunRepository.GetInstance();
+    private SmashRunRepository repository = SmashRunRepository.GetInstance();
     private final MutableLiveData<List<UserRunUiState>> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
@@ -26,7 +25,6 @@ public class RunViewModel extends ViewModel {
         //Grabs data from repo using a callback
         repository.GetRuns(runs -> {
             ArrayList<UserRunUiState> states = new ArrayList<>();
-            Log.d("RunViewModel", String.valueOf(runs.size()));
 
             //Takes data from Repo and transforms it into what the UI consumes
             for (Run run :
@@ -36,7 +34,17 @@ public class RunViewModel extends ViewModel {
                 state.distance = String.valueOf(run.Distance);
                 state.duration = String.valueOf(run.Duration);
                 state.pace = String.valueOf(run.Duration / run.Distance);
-                state.date = String.valueOf(run.Date);
+
+                String date = run.Date;
+                Date dateObj = null;
+                try {
+                    dateObj = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
+                } catch (ParseException e) {
+                    new SimpleDateFormat("");
+                }
+                String dateStr = new SimpleDateFormat("MM/dd/yy").format(dateObj);
+
+                state.date = dateStr;
                 states.add(state);
             }
 

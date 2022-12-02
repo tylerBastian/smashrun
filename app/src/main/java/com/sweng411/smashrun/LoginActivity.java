@@ -141,23 +141,27 @@ public class LoginActivity extends AppCompatActivity {
 
         //Sets up a webpage to get the Authentication token for step 1 of OAUTH
         WebView webView = new WebView(this);
+        Log.d("Auth", uri.toString());
         webView.loadUrl(uri.toString());
         webView.getSettings().setJavaScriptEnabled(true);
 
         //Puts the webpage into view
 
         Log.d("Auth", "Setting webview");
-        setContentView(webView);
-
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 //Once the page loads, grab the authentication token from the title
                 String authToken = view.getTitle();
+                Log.d("Auth", "Webpage title " + authToken);
 
 
+                //There is a weird error on first time log in, might be able to pull code from response
                 if (!authToken.equals("Smashrun - Stats for runners")) {
+                    if(authToken.equals("undefined")) {
+                        view.reload();
+                    }
                     try {
                         Log.d("Auth", "New Authentication Token: " + authToken);
                         SharedPreferences.Editor editor = sharedPref.edit();
@@ -172,9 +176,16 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                 }
 
-
             }
+
+
+
         });
+
+        setContentView(webView);
+
+
+
     }
 
     private void GetAccessToken(String authToken) throws IOException {
