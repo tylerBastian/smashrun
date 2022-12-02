@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class MainViewModel extends ViewModel {
+public class HomeViewModel extends ViewModel {
     private SmashRunRepository repository = SmashRunRepository.GetInstance();
     private final MutableLiveData<DistancePerMonthBarChartState> distancePerMonthBarChartStateMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<RunTimePieChartState> runTimePieChartStateMutableLiveData = new MutableLiveData<>();

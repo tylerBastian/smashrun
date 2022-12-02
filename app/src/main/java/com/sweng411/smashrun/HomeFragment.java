@@ -30,7 +30,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.sweng411.smashrun.State.DistancePerMonthBarChartState;
 import com.sweng411.smashrun.State.RunTimePieChartState;
 import com.sweng411.smashrun.State.YearSummaryUiState;
-import com.sweng411.smashrun.ViewModel.MainViewModel;
+import com.sweng411.smashrun.ViewModel.HomeViewModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,7 +46,7 @@ import java.util.Map;
  */
 public class HomeFragment extends Fragment {
 
-    private MainViewModel viewModel;
+    private HomeViewModel viewModel;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,7 +97,7 @@ public class HomeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         viewModel.GetPieChartState().observe(this, state -> {
             UpdatePieChart(state);
         });
