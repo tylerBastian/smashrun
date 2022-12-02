@@ -137,35 +137,35 @@ public class HomeFragment extends Fragment {
 
         stats = getYearlyStatsJsonString();
 
-//        try {
-//            JSONObject jsonObject = new JSONObject(stats);
-//
-//            totalDistance = jsonObject.getString("totalDistance");
-//            totalDistance = String.format("%.2f", Double.parseDouble(totalDistance)*0.621371);
-//
-//            totalRunCount = jsonObject.getString("runCount");
-//
-//            averagePace = jsonObject.getString("averagePace");
-//            averagePace = minPerKmtoMinPerMile(averagePace);
-//
-//            averageRunLength = jsonObject.getString("averageRunLength");
-//            averageRunLength = String.format("%.2f", Double.parseDouble(averageRunLength)*0.621371);
-//
-//            AmRuns = jsonObject.getInt("daysRunAM");
-//            PmRuns = jsonObject.getInt("daysRunPM");
-//            showPieChart(AmRuns, PmRuns);
-//            showDistancePerMonthBarChart();
-//
-//        } catch (JSONException | ParseException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            JSONObject jsonObject = new JSONObject(stats);
+
+            totalDistance = jsonObject.getString("totalDistance");
+            totalDistance = String.format("%.2f", Double.parseDouble(totalDistance) * 0.621371);
+
+            totalRunCount = jsonObject.getString("runCount");
+
+            averagePace = jsonObject.getString("averagePace");
+            averagePace = minPerKmtoMinPerMile(averagePace);
+
+            averageRunLength = jsonObject.getString("averageRunLength");
+            averageRunLength = String.format("%.2f", Double.parseDouble(averageRunLength) * 0.621371);
+
+            AmRuns = jsonObject.getInt("daysRunAM");
+            PmRuns = jsonObject.getInt("daysRunPM");
+            showPieChart(AmRuns, PmRuns);
+            showDistancePerMonthBarChart();
+
+        } catch (JSONException | ParseException e) {
+            e.printStackTrace();
+        }
 
         yearSummaryRunCount.setText(String.format("Total runs: %s", totalRunCount));
         yearSummaryDistance.setText(String.format("Total miles run: %s ", totalDistance));
         yearAveragePace.setText(String.format("Average pace: %s min/mi", averagePace));
         yearAverageRunLength.setText(String.format("Average run length: %s mi", averageRunLength));
 
-        //getDistancePerMonth(MainActivity.getAllActivitiesJsonString());
+        getDistancePerMonth(MainActivity.getAllActivitiesJsonString());
 
         return view;
     }
