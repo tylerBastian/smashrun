@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     String AuthURLString = "https://secure.smashrun.com/oauth2/token";
     String CheckUrlString = "https://api.smashrun.com/v1/auth/";
     SharedPreferences sharedPref;
-    private final OkHttpClient client = new OkHttpClient();
+    private OkHttpClient client = new OkHttpClient();
 
 
     // Prepare URL
@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences("com.sweng411.smashrun", Context.MODE_PRIVATE);
     }
 
-
+    @Override
     protected void onStart() {
         //Check if user has already signed in if yes send to mainActivity
         //This to avoid signing in everytime you open the app.
@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                         //Refresh Access Token
                     }
                     else {
-                        sendToMainActivity();
+                        SendToMainActivity();
                     }
 
                 } catch (JSONException e) {
@@ -231,7 +231,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("token", JsonResponse.getString("access_token"));
                     editor.putString("refresh", JsonResponse.getString("refresh_token"));
                     editor.apply();
-                    sendToMainActivity();
+                    SendToMainActivity();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -245,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void sendToMainActivity() {
+    private void SendToMainActivity() {
         //This is to send user to MainActivity
         Intent MainIntent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(MainIntent);

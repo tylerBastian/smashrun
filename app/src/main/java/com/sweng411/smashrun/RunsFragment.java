@@ -1,6 +1,5 @@
 package com.sweng411.smashrun;
 
-import static java.lang.Thread.sleep;
 
 import android.os.Bundle;
 
@@ -14,12 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sweng411.smashrun.Model.Run;
-import com.sweng411.smashrun.State.RunsUiState;
 import com.sweng411.smashrun.State.UserRunUiState;
 import com.sweng411.smashrun.ViewModel.RunViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,7 +37,6 @@ public class RunsFragment extends Fragment {
     private RunViewModel viewModel;
 
     private static final String TAG = "ListFragment";
-    //private String jsonString;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -78,7 +73,7 @@ public class RunsFragment extends Fragment {
         //Pulls LiveDataRuns from View Model and observes changes to variable, when changed it updates UI
         //That way you dont need to pull the data before you attempt to display
         viewModel.GetUserRuns().observe(this, (List<UserRunUiState> userRuns) -> {
-            initRecyclerView(userRuns);
+            InitRecyclerView(userRuns);
         });
 
         if (getArguments() != null) {
@@ -106,7 +101,7 @@ public class RunsFragment extends Fragment {
     }
 
 
-    private void initRecyclerView(List<UserRunUiState> runs) {
+    private void InitRecyclerView(List<UserRunUiState> runs) {
         //Sets up the data when it is received from the ViewModel
         Log.d(TAG, "Init Recycler View");
 
@@ -117,9 +112,6 @@ public class RunsFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-
-    //get 10 most recent activities
-//        String url = "https://api.smashrun.com/v1/my/activities/search?page=0&count=10";
 
 
 }

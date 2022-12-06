@@ -38,8 +38,7 @@ public class HomeViewModel extends ViewModel {
             yearSummaryUiState.AveragePace = minPerKmtoMinPerMile(yearSummary.AveragePace);
             //Why is this multiplied by 0.621
             yearSummaryUiState.AverageRunLength = String.format("%.2f", yearSummary.AverageRunLength * 0.621371);
-            yearSummaryUiState.PmRuns = yearSummary.PmRuns;
-            yearSummaryUiState.AmRuns = yearSummary.AmRuns;
+
             yearSummaryLiveData.postValue(yearSummaryUiState);
         });
 

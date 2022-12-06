@@ -35,13 +35,14 @@ import com.sweng411.smashrun.ViewModel.HomeViewModel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
+ * Use the {@link HomeFragment#NewInstance} factory method to
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
@@ -63,6 +64,7 @@ public class HomeFragment extends Fragment {
     private BarChart distancePerMonthBarChart;
 
 
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -80,7 +82,7 @@ public class HomeFragment extends Fragment {
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment NewInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -218,7 +220,9 @@ public class HomeFragment extends Fragment {
         runTimePieChart = view.findViewById(R.id.time_run_pie_chart);
         distancePerMonthBarChart = view.findViewById(R.id.distance_per_month_bar_chart);
 
-        String text = String.format("%d Running Report", MainActivity.getYear());
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        String text = String.format("%d Running Report", year);
         yearSummaryText.setText(text);
 
 

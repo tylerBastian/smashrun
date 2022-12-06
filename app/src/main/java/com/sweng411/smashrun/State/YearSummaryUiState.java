@@ -5,8 +5,6 @@ public class YearSummaryUiState {
     public String TotalRunCount;
     public String AveragePace;
     public String AverageRunLength;
-    public int AmRuns;
-    public int PmRuns;
 
 
 }

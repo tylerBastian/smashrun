@@ -2,5 +2,5 @@ package com.sweng411.smashrun;
 
 public interface RepoCallback<T> {
 
-    void HandleRepoData(T object);
+    void HandleRepoData(T data);
 }

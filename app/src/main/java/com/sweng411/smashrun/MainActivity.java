@@ -43,30 +43,17 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout myDrawerLayout;
     private BottomNavigationView bottomNavigationView;
     private HomeFragment homeFragment;
-    private static List<Protocol> protocols = new ArrayList<>();
-    private static OkHttpClient okHttpClient;
 
     private static SharedPreferences sharedPref;
-    private static boolean listLoaded = false;
-    private static String allActivitiesJsonString;
-    private static String yearlyStatsJsonString;
-    private boolean activitiesLoaded = false;
-    private boolean yearlyStatsLoaded = false;
-    private static Calendar calendar;
-    private static int year;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
         sharedPref = getSharedPreferences("com.sweng411.smashrun", Context.MODE_PRIVATE);
         setContentView(R.layout.activity_main);
-
-        protocols.add(Protocol.HTTP_1_1);
-        okHttpClient = new OkHttpClient.Builder().protocols(protocols).build();
-
 
         //Call api, load activities into json string
 
@@ -181,38 +168,6 @@ public class MainActivity extends AppCompatActivity {
         return sharedPref;
     }
 
-    public static OkHttpClient getOkHttpClient() {
-        return okHttpClient;
-    }
-
-
-
-
-
-
-    //Managing ListFragment data, probably not the best way to do this
-    public static void setListLoaded(boolean listLoaded) {
-        MainActivity.listLoaded = listLoaded;
-    }
-    public static boolean isListLoaded() {
-        return listLoaded;
-    }
-    public static void setAllActivitiesJsonString(String allActivitiesJsonString) {
-        MainActivity.allActivitiesJsonString = allActivitiesJsonString;
-    }
-    public static void setYearlyStatsJsonString(String yearlyStatsJsonString) {
-        MainActivity.yearlyStatsJsonString = yearlyStatsJsonString;
-    }
-    public static String getAllActivitiesJsonString() {
-        return allActivitiesJsonString;
-    }
-    public static String getYearlyStatsJsonString() {
-        return yearlyStatsJsonString;
-    }
-
-    public static int getYear() {
-        return year;
-    }
 
     public void logout(View view) {
         SharedPreferences.Editor editor = getSharedPref().edit();
