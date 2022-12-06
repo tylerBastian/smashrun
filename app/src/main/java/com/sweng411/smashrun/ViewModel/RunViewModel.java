@@ -1,6 +1,9 @@
 package com.sweng411.smashrun.ViewModel;
 
 
+import android.text.format.DateUtils;
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -20,7 +23,7 @@ public class RunViewModel extends ViewModel {
     private final MutableLiveData<List<UserRunUiState>> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
-    public LiveData<List<UserRunUiState>> GetUserRuns() {
+    public LiveData<List<UserRunUiState>> GetUserRunsState() {
 
         //Grabs data from repo using a callback
         repository.GetRuns(runs -> {
@@ -31,9 +34,12 @@ public class RunViewModel extends ViewModel {
                     runs) {
                 UserRunUiState state = new UserRunUiState();
                 state.calories = String.valueOf(run.Calories);
-                state.distance = String.valueOf(run.Distance);
-                state.duration = String.valueOf(run.Duration);
-                state.pace = String.valueOf(run.Duration / run.Distance);
+                state.distance = String.format("%.2f", (run.Distance * 0.621371));
+                state.duration =  DateUtils.formatElapsedTime((long) run.Duration);
+                String pace =  String.valueOf(run.Duration/run.Distance);
+                Log.d("RVM", pace);
+                state.pace =  String.format("%.2f", Float.parseFloat(pace));
+                Log.d("RVM", state.pace);
 
                 String date = run.Date;
                 Date dateObj = null;
