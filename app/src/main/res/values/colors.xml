@@ -12,4 +12,5 @@
     <color name="listCardBorder">#ECECEC</color>
     <color name="iconColorNotSelected">#808080</color>
     <color name="addRunCardBackground">#F0F0F0</color>
+    <color name="lowAlphaBackground">#80000000</color>
 </resources>
