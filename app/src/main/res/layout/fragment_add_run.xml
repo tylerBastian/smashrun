@@ -1,27 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".AddRunFragment">
+    tools:context=".AddRunFragment"
+    android:paddingTop="50dp"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="321dp"
-        android:layout_height="72dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Add Run Fragment Placeholder"
-        android:textColor="@color/textColorWhite"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.379" />
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/add_run_card"
+        android:layout_width="300dp"
+        android:layout_height="450dp"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        android:paddingBottom="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:cardBackgroundColor="@color/addRunCardBackground"
+        app:cardCornerRadius="15dp"
+        app:strokeColor="@color/bottomNavBackground"
+        app:strokeWidth="3dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true">
+
+<!--        <RelativeLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/date_text"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_alignParentLeft="true"-->
+<!--                android:text="Date:"-->
+<!--                >-->
+<!--            </TextView>-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/date_edit"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_toRightOf="@+id/date_text"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                >-->
+<!--            </EditText>-->
+
+<!--        </RelativeLayout>-->
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/add_run_linear_layout_Top"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp">
+
+                        <TextView
+                            android:id="@+id/date_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Date: " />
+
+                        <EditText
+                            android:id="@+id/date_edit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:cursorVisible="false"
+                            android:hint="Select Date"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp">
+
+                        <TextView
+                            android:id="@+id/time_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Time: " />
+
+                        <EditText
+                            android:id="@+id/time_edit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="hh:mm (24hr)"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp">
+
+                        <TextView
+                            android:id="@+id/distance_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Distance: " />
+
+                        <EditText
+                            android:id="@+id/distance_edit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="0.00 (mi)"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp">
+
+
+                        <TextView
+                            android:id="@+id/duration_text"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Duration" />
+
+                        <EditText
+                            android:id="@+id/duration_edit"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="hh:mm:ss"
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true">
+                    <Button
+                        android:id="@+id/button_submit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Add Run"
+                        android:layout_margin="10dp"
+                        />
+
+                    <Button
+                        android:id="@+id/button_reset"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Reset"
+                        android:layout_margin="10dp"
+                        />
+
+                </LinearLayout>
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>

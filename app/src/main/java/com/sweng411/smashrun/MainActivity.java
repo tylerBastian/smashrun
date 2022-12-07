@@ -133,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new RunsFragment()).commit();
                         return true;
                     case R.id.bottomNavAddRun:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new AddRunFragment()).commit();
+                        getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment, new AddRunFragment()).commit();
+                        //dim background of main activity
                         return true;
                     case R.id.bottomNavBadges:
                         getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new BadgesFragment()).commit();
