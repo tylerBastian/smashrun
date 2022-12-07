@@ -20,14 +20,19 @@ import androidx.fragment.app.Fragment;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.charts.ScatterChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.data.ScatterData;
+import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.google.android.material.card.MaterialCardView;
@@ -71,6 +76,9 @@ public class HomeFragment extends Fragment {
     private TextView yearAverageRunLength;
     private PieChart runTimePieChart;
     private BarChart distancePerMonthBarChart;
+    private ScatterChart paceVsDistanceScatterChart;
+    private ScatterDataSet paceVsDistanceScatterDataSet;
+    private ScatterData paceVsDistanceScatterData;
     private String totalDistance;
     private String totalRunCount;
     private String averagePace;
@@ -78,6 +86,7 @@ public class HomeFragment extends Fragment {
     private int AmRuns;
     private int PmRuns;
     private String stats;
+    private String activities;
     private List<String> last12Months;
 
     // TODO: Rename and change types of parameters
@@ -131,6 +140,7 @@ public class HomeFragment extends Fragment {
         yearAverageRunLength = view.findViewById(R.id.running_report_avg_run_length);
         runTimePieChart = view.findViewById(R.id.time_run_pie_chart);
         distancePerMonthBarChart = view.findViewById(R.id.distance_per_month_bar_chart);
+        paceVsDistanceScatterChart = view.findViewById(R.id.pace_vs_distance_scatter_chart);
 
         String text = String.format("%d Running Report", MainActivity.getYear());
         yearSummaryText.setText(text);
@@ -155,6 +165,7 @@ public class HomeFragment extends Fragment {
             PmRuns = jsonObject.getInt("daysRunPM");
             showPieChart(AmRuns, PmRuns);
             showDistancePerMonthBarChart();
+            showScatterChart();
 
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
@@ -321,6 +332,152 @@ public class HomeFragment extends Fragment {
         distancePerMonthBarChart.invalidate();
         distancePerMonthBarChart.animateY(1000, Easing.EaseInOutQuad);
 
+    }
+
+    private void showScatterChart() throws JSONException, ParseException {
+        ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.parseColor("#FF8D60"));
+        colors.add(Color.parseColor("#FF6122"));
+
+
+        ArrayList scatterEntries = new ArrayList<>();
+
+        activities = MainActivity.getAllActivitiesJsonString();
+        JSONArray activitiesJsonArray = new JSONArray(activities);
+        for(int i = 0; i < activitiesJsonArray.length(); i++){
+            JSONObject itemObj = activitiesJsonArray.getJSONObject(i);
+
+            String date = itemObj.getString("startDateTimeLocal");
+            Date dateObj = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(date);
+            String dateStr = new SimpleDateFormat("MM/dd/yy").format(dateObj);
+            date = dateStr;
+            Log.d("date", date);
+            //if date is not in last 12 months, break
+            if(!isDateInLast12Months(date)){
+                break;
+            }
+
+            String distance = itemObj.getString("distance");
+            distance = String.format("%.2f", Double.parseDouble(distance)*0.621371);
+            Log.d("distance", distance);
+
+            String duration = itemObj.getString("duration");
+            String durationStr = DateUtils.formatElapsedTime((long) Double.parseDouble(duration));
+            Log.d("duration", durationStr);
+
+            String pace = String.valueOf(Double.parseDouble(duration) / Double.parseDouble(distance));
+            String paceStr = DateUtils.formatElapsedTime((long) Double.parseDouble(pace));
+            Log.d("pace", pace);
+
+
+            scatterEntries.add(new Entry(Float.parseFloat(distance), (Float.parseFloat(pace))/60));
+        }
+
+        paceVsDistanceScatterDataSet = new ScatterDataSet(scatterEntries, "Miles");
+        paceVsDistanceScatterData = new ScatterData(paceVsDistanceScatterDataSet);
+        paceVsDistanceScatterChart.setData(paceVsDistanceScatterData);
+        paceVsDistanceScatterDataSet.setColors(colors);
+        paceVsDistanceScatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+        paceVsDistanceScatterDataSet.setScatterShapeSize(20f);
+        paceVsDistanceScatterDataSet.setDrawValues(false);
+        paceVsDistanceScatterDataSet.setScatterShapeHoleRadius(0f);
+
+        XAxis xAxis = paceVsDistanceScatterChart.getXAxis();
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawLabels(true);
+        xAxis.setDrawLimitLinesBehindData(false);
+        xAxis.setDrawGridLinesBehindData(false);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawLabels(true);
+        xAxis.setDrawLimitLinesBehindData(false);
+        xAxis.setDrawGridLinesBehindData(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+        xAxis.setGranularityEnabled(true);
+        xAxis.setLabelCount(10);
+        xAxis.setTextColor(Color.parseColor("#EFEFEF"));
+
+        YAxis yAxisLeft = paceVsDistanceScatterChart.getAxisLeft();
+        yAxisLeft.setDrawGridLines(false);
+        yAxisLeft.setDrawAxisLine(true);
+        yAxisLeft.setDrawLabels(true);
+        yAxisLeft.setDrawZeroLine(false);
+        yAxisLeft.setInverted(true);
+        yAxisLeft.setDrawTopYLabelEntry(false);
+        yAxisLeft.setDrawLimitLinesBehindData(false);
+        yAxisLeft.setDrawGridLinesBehindData(false);
+        yAxisLeft.setDrawLabels(true);
+        yAxisLeft.setDrawZeroLine(false);
+        yAxisLeft.setDrawTopYLabelEntry(false);
+        yAxisLeft.setDrawLimitLinesBehindData(false);
+        yAxisLeft.setDrawGridLinesBehindData(false);
+        yAxisLeft.setTextColor(Color.parseColor("#EFEFEF"));
+
+        YAxis yAxisRight = paceVsDistanceScatterChart.getAxisRight();
+        yAxisRight.setEnabled(false);
+
+
+        paceVsDistanceScatterChart.setDrawGridBackground(false);
+        paceVsDistanceScatterChart.setDrawBorders(false);
+        paceVsDistanceScatterChart.setDrawMarkers(false);
+        paceVsDistanceScatterChart.setDrawGridBackground(false);
+        paceVsDistanceScatterChart.setDrawBorders(false);
+        paceVsDistanceScatterChart.setDrawMarkers(false);
+
+        paceVsDistanceScatterChart.setTouchEnabled(false);
+        paceVsDistanceScatterChart.setDragEnabled(false);
+        paceVsDistanceScatterChart.setScaleEnabled(false);
+        paceVsDistanceScatterChart.setPinchZoom(false);
+        paceVsDistanceScatterChart.setDoubleTapToZoomEnabled(false);
+        paceVsDistanceScatterChart.setHighlightPerDragEnabled(false);
+        paceVsDistanceScatterChart.setHighlightPerTapEnabled(false);
+        paceVsDistanceScatterChart.setHighlightPerDragEnabled(false);
+        paceVsDistanceScatterChart.setHighlightPerTapEnabled(false);
+        paceVsDistanceScatterChart.setDescription(null);
+        paceVsDistanceScatterChart.getLegend().setEnabled(true);
+        //get ride of colorbar
+        paceVsDistanceScatterChart.getLegend().setForm(Legend.LegendForm.NONE);
+        paceVsDistanceScatterChart.getLegend().setTextColor(Color.parseColor("#EFEFEF"));
+        paceVsDistanceScatterChart.getLegend().setTextSize(12f);
+        paceVsDistanceScatterChart.getLegend().setFormSize(12f);
+        paceVsDistanceScatterChart.getLegend().setFormToTextSpace(4f);
+        paceVsDistanceScatterChart.getLegend().setXEntrySpace(10f);
+        paceVsDistanceScatterChart.getLegend().setYEntrySpace(0f);
+        paceVsDistanceScatterChart.getLegend().setWordWrapEnabled(true);
+        paceVsDistanceScatterChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        paceVsDistanceScatterChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        paceVsDistanceScatterChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        paceVsDistanceScatterChart.getLegend().setDrawInside(false);
+
+        paceVsDistanceScatterChart.getLegend().setXEntrySpace(10f);
+        paceVsDistanceScatterChart.getLegend().setYEntrySpace(10f);
+
+
+
+
+        paceVsDistanceScatterChart.invalidate();
+        paceVsDistanceScatterChart.animateXY(1000, 1000);
+
+    }
+
+    private boolean isDateInLast12Months(String date) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -12);
+        Date twelveMonthsAgo = cal.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+        String twelveMonthsAgoStr = sdf.format(twelveMonthsAgo);
+        Log.d("twelveMonthsAgo", twelveMonthsAgoStr);
+        try {
+            Date dateObj = sdf.parse(date);
+            Date twelveMonthsAgoObj = sdf.parse(twelveMonthsAgoStr);
+            if (dateObj.after(twelveMonthsAgoObj)) {
+                return true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 

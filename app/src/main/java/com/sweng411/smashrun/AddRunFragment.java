@@ -37,6 +37,9 @@ public class AddRunFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private EditText date;
+    private EditText distance;
+    private EditText time;
+    private EditText duration;
     private Button addRunButton;
     private Button resetButton;
 
@@ -102,10 +105,10 @@ public class AddRunFragment extends Fragment {
         addRunButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText date = view.findViewById(R.id.date_edit);
-                EditText distance = view.findViewById(R.id.distance_edit);
-                EditText time = view.findViewById(R.id.time_edit);
-                EditText duration = view.findViewById(R.id.duration_edit);
+                date = view.findViewById(R.id.date_edit);
+                distance = view.findViewById(R.id.distance_edit);
+                time = view.findViewById(R.id.time_edit);
+                duration = view.findViewById(R.id.duration_edit);
 
                 if (date.getText().toString().isEmpty() || distance.getText().toString().isEmpty() || time.getText().toString().isEmpty() || duration.getText().toString().isEmpty()) {
                     return;
@@ -146,6 +149,18 @@ public class AddRunFragment extends Fragment {
         });
 
         resetButton = view.findViewById(R.id.button_reset);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                date.setText("");
+                distance = view.findViewById(R.id.distance_edit);
+                distance.setText("");
+                time = view.findViewById(R.id.time_edit);
+                time.setText("");
+                duration = view.findViewById(R.id.duration_edit);
+                duration.setText("");
+            }
+        });
 
         return view;
     }

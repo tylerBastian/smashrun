@@ -72,7 +72,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Date: " />
+                            android:text="Date: "
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorBlack"
+                            />
 
                         <EditText
                             android:id="@+id/date_edit"
@@ -98,7 +102,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Time: " />
+                            android:text="Time: "
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorBlack"
+                            />
 
                         <EditText
                             android:id="@+id/time_edit"
@@ -121,7 +129,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Distance: " />
+                            android:text="Distance: "
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorBlack"
+                            />
 
                         <EditText
                             android:id="@+id/distance_edit"
@@ -145,7 +157,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Duration" />
+                            android:text="Duration: "
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/textColorBlack"
+                            />
 
                         <EditText
                             android:id="@+id/duration_edit"
@@ -169,7 +185,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Add Run"
-                        android:layout_margin="10dp"
+                        android:textStyle="bold"
+                        android:layout_margin="20dp"
                         />
 
                     <Button
@@ -178,7 +195,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Reset"
-                        android:layout_margin="10dp"
+                        android:textStyle="bold"
+                        android:layout_margin="20dp"
                         />
 
                 </LinearLayout>
