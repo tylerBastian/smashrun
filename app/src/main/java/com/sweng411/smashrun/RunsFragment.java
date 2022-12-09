@@ -72,7 +72,7 @@ public class RunsFragment extends Fragment {
 
         //Pulls LiveDataRuns from View Model and observes changes to variable, when changed it updates UI
         //That way you dont need to pull the data before you attempt to display
-        viewModel.GetUserRuns().observe(this, (List<UserRunUiState> userRuns) -> {
+        viewModel.GetUserRunsState().observe(this, (List<UserRunUiState> userRuns) -> {
             InitRecyclerView(userRuns);
         });
 

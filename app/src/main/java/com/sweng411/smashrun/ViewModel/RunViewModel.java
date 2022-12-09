@@ -37,9 +37,9 @@ public class RunViewModel extends ViewModel {
                 state.distance = String.format("%.2f", (run.Distance * 0.621371));
                 state.duration =  DateUtils.formatElapsedTime((long) run.Duration);
                 String pace =  String.valueOf(run.Duration/run.Distance);
-                Log.d("RVM", pace);
                 state.pace =  String.format("%.2f", Float.parseFloat(pace));
-                Log.d("RVM", state.pace);
+                Log.d("RVM", "Model Calories: " + run.Calories);
+                Log.d("RVM","State Calories: " + state.calories);
 
                 String date = run.Date;
                 Date dateObj = null;
@@ -56,7 +56,7 @@ public class RunViewModel extends ViewModel {
 
             //Live data is a way to update UI after it received the initial variable
             userLiveData.postValue(states);
-        });
+        }, false);
 
         //Returns initial live data variable for UI to consume
         return userLiveData;

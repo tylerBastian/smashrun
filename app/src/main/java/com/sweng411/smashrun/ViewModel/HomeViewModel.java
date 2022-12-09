@@ -57,13 +57,13 @@ public class HomeViewModel extends ViewModel {
 
     public LiveData<DistancePerMonthBarChartState> GetDistancePerMonthState() {
 
-        repository.GetRuns( runs -> {
+        repository.GetRuns(runs -> {
             DistancePerMonthBarChartState state = new DistancePerMonthBarChartState();
 
 
             state.DistancePerMonthMap = getDistancePerMonth(runs);
             distancePerMonthBarChartStateMutableLiveData.postValue(state);
-        });
+        }, false);
 
         return distancePerMonthBarChartStateMutableLiveData;
     }

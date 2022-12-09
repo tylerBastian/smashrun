@@ -36,13 +36,22 @@ public class SmashRunRepository {
     }
 
 
+    private ArrayList<Run> runs = null;
+    private YearSummary yearSummary = null;
+
     public static SmashRunRepository GetInstance() {
         return instance;
     }
 
-
     //Gets All Runs of a user, can be changed to take a parameter for only a certain amount
-    public void GetRuns(RepoCallback<ArrayList<Run>> callback) {
+    public void GetRuns(RepoCallback<ArrayList<Run>> callback, boolean refresh) {
+
+        //Check
+        if(!refresh && runs != null) {
+            callback.HandleRepoData(runs);
+            return;
+        }
+
         String url = "https://api.smashrun.com/v1/my/activities";
         String token = getSharedPref().getString("token", "");
         okhttp3.Request request = new okhttp3.Request.Builder()
@@ -51,7 +60,7 @@ public class SmashRunRepository {
                 .build();
 
 
-        ArrayList<Run> runList = new ArrayList<>();
+        runs = new ArrayList<>();
 
         httpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -59,7 +68,7 @@ public class SmashRunRepository {
                 e.printStackTrace();
                 Log.d("onFailure", "failure");
                 //Might as well send something back
-                callback.HandleRepoData(runList);
+                callback.HandleRepoData(runs);
             }
 
             @Override
@@ -72,7 +81,7 @@ public class SmashRunRepository {
                         responseJSON = new JSONArray(response.body().string());
                         for (int i = 0; i < responseJSON.length(); i++) {
 
-                            runList.add(CreateUserRunFromJson(responseJSON.getJSONObject(i)));
+                            runs.add(CreateUserRunFromJson(responseJSON.getJSONObject(i)));
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -81,7 +90,7 @@ public class SmashRunRepository {
                 }
 
                 //This calls the ViewModel back to let it know it can use the data
-                callback.HandleRepoData(runList);
+                callback.HandleRepoData(runs);
 
             }
         });
