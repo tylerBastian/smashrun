@@ -154,6 +154,31 @@ public class SmashRunRepository {
         });
     }
 
+    public void PostRuns(Run run) {
+
+        String json = "{\"startDateTimeLocal\":\"" + run.Date + "\",\"distance\":" + run.Distance + ",\"duration\":" + run.Duration + "}";
+
+        String url = "https://api.smashrun.com/v1/my/activities/";
+        String token = getSharedPref().getString("token", "");
+        String auth = getSharedPref().getString("auth", "");
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", auth + " " + token)
+                .post(okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json))
+                .build();
+
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("AddRunFragment", "onFailure: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("AddRunFragment", "onResponse: " + response.body().string());
+            }
+        });
+    }
 
     Run CreateUserRunFromJson(JSONObject userRunJson) {
         Run userRun = new Run();
