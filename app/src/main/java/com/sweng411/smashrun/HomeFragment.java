@@ -398,20 +398,29 @@ public class HomeFragment extends Fragment {
         xAxis.setLabelCount(10);
         xAxis.setTextColor(Color.parseColor("#EFEFEF"));
 
+
         YAxis yAxisLeft = paceVsDistanceScatterChart.getAxisLeft();
+        yAxisLeft.setDrawLabels(true);
+        yAxisLeft.setLabelCount(6);
+//        ArrayList labels = new ArrayList();
+//        labels.add("7:00");
+//        labels.add("7:20");
+//        labels.add("7:40");
+//        labels.add("8:00");
+//        labels.add("8:20");
+//        labels.add("8:40");
+//
+//        IndexAxisValueFormatter formatter = new IndexAxisValueFormatter(labels);
+//        yAxisLeft.setValueFormatter(formatter);
+
         yAxisLeft.setDrawGridLines(false);
         yAxisLeft.setDrawAxisLine(true);
-        yAxisLeft.setDrawLabels(true);
         yAxisLeft.setDrawZeroLine(false);
         yAxisLeft.setInverted(true);
         yAxisLeft.setDrawTopYLabelEntry(false);
         yAxisLeft.setDrawLimitLinesBehindData(false);
         yAxisLeft.setDrawGridLinesBehindData(false);
-        yAxisLeft.setDrawLabels(true);
         yAxisLeft.setDrawZeroLine(false);
-        yAxisLeft.setDrawTopYLabelEntry(false);
-        yAxisLeft.setDrawLimitLinesBehindData(false);
-        yAxisLeft.setDrawGridLinesBehindData(false);
         yAxisLeft.setTextColor(Color.parseColor("#EFEFEF"));
 
         YAxis yAxisRight = paceVsDistanceScatterChart.getAxisRight();
@@ -441,17 +450,15 @@ public class HomeFragment extends Fragment {
         paceVsDistanceScatterChart.getLegend().setTextColor(Color.parseColor("#EFEFEF"));
         paceVsDistanceScatterChart.getLegend().setTextSize(12f);
         paceVsDistanceScatterChart.getLegend().setFormSize(12f);
-        paceVsDistanceScatterChart.getLegend().setFormToTextSpace(4f);
-        paceVsDistanceScatterChart.getLegend().setXEntrySpace(10f);
-        paceVsDistanceScatterChart.getLegend().setYEntrySpace(0f);
+        paceVsDistanceScatterChart.getLegend().setFormToTextSpace(1f);
         paceVsDistanceScatterChart.getLegend().setWordWrapEnabled(true);
         paceVsDistanceScatterChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         paceVsDistanceScatterChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         paceVsDistanceScatterChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
         paceVsDistanceScatterChart.getLegend().setDrawInside(false);
 
-        paceVsDistanceScatterChart.getLegend().setXEntrySpace(10f);
-        paceVsDistanceScatterChart.getLegend().setYEntrySpace(10f);
+        paceVsDistanceScatterChart.getLegend().setXEntrySpace(15f);
+        paceVsDistanceScatterChart.getLegend().setYEntrySpace(100f);
 
 
 

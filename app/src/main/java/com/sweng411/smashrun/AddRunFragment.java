@@ -118,11 +118,18 @@ public class AddRunFragment extends Fragment {
                 Double distanceDouble = Double.parseDouble(distance.getText().toString());
                 String timeString = time.getText().toString();
                 String durationString = duration.getText().toString();
-                //convert duration to seconds
+                //convert duration hh:mm:ss to seconds
                 String[] durationArray = durationString.split(":");
-                int durationSeconds = Integer.parseInt(durationArray[0]) * 60 + Integer.parseInt(durationArray[1]);
+                int durationSeconds = Integer.parseInt(durationArray[0]) * 3600 + Integer.parseInt(durationArray[1]) * 60 + Integer.parseInt(durationArray[2]);
+
                 //convert to double
                 double durationDouble = (double) durationSeconds;
+
+
+//                String[] durationArray = durationString.split(":");
+//                int durationSeconds = Integer.parseInt(durationArray[0]) * 60 + Integer.parseInt(durationArray[1]);
+//                //convert to double
+//                double durationDouble = (double) durationSeconds;
 
                 //convert date string to yyyy-mm-dd format
                 String[] dateArray = dateString.split("/");
@@ -136,6 +143,7 @@ public class AddRunFragment extends Fragment {
 
                 //convert to json
                 String json = "{\"startDateTimeLocal\":\"" + startDateTimeLocal + "\",\"distance\":" + distanceDouble + ",\"duration\":" + durationDouble + "}";
+                Log.d("json", json);
 
                 //post to api
                 postRunJson(json);
