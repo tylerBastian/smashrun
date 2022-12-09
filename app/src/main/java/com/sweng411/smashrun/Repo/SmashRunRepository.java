@@ -65,7 +65,6 @@ public class SmashRunRepository {
 
 
         runs = new ArrayList<>();
-
         httpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {

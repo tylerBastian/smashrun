@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,19 +17,25 @@ import androidx.lifecycle.ViewModelProvider;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.charts.ScatterChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.data.ScatterData;
+import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.google.android.material.card.MaterialCardView;
 import com.sweng411.smashrun.State.DistancePerMonthBarChartState;
 import com.sweng411.smashrun.State.RunTimePieChartState;
+import com.sweng411.smashrun.State.ScatterPlotEntry;
 import com.sweng411.smashrun.State.YearSummaryUiState;
 import com.sweng411.smashrun.ViewModel.HomeViewModel;
 
@@ -54,7 +61,6 @@ public class HomeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private MaterialCardView yearSummaryCard;
     private TextView yearSummaryText;
     private TextView yearSummaryDistance;
     private TextView yearSummaryRunCount;
@@ -62,6 +68,7 @@ public class HomeFragment extends Fragment {
     private TextView yearAverageRunLength;
     private PieChart runTimePieChart;
     private BarChart distancePerMonthBarChart;
+    private ScatterChart paceVsDistanceScatterChart;
 
 
 
@@ -109,6 +116,7 @@ public class HomeFragment extends Fragment {
         viewModel.GetYearSummaryState().observe(this, state -> {
             UpdateYearSummary(state);
         });
+        viewModel.GetScatterPlotEntries().observe(this, state -> UpdateScatterChart(state));
 
     }
 
@@ -203,6 +211,32 @@ public class HomeFragment extends Fragment {
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
     }
 
+    void UpdateScatterChart(ArrayList<ScatterPlotEntry> entries) {
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.parseColor("#FF8D60"));
+        colors.add(Color.parseColor("#FF6122"));
+
+
+        ArrayList scatterEntries = new ArrayList<>();
+
+
+        for(int i = 0; i < entries.size(); i++){
+
+            scatterEntries.add(new Entry(entries.get(i).Distance, (entries.get(i).Pace)/60));
+        }
+
+        ScatterDataSet paceVsDistanceScatterDataSet = new ScatterDataSet(scatterEntries, "Miles");
+        ScatterData paceVsDistanceScatterData = new ScatterData(paceVsDistanceScatterDataSet);
+        paceVsDistanceScatterChart.setData(paceVsDistanceScatterData);
+        paceVsDistanceScatterDataSet.setColors(colors);
+        paceVsDistanceScatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+        paceVsDistanceScatterDataSet.setScatterShapeSize(20f);
+        paceVsDistanceScatterDataSet.setDrawValues(false);
+        paceVsDistanceScatterDataSet.setScatterShapeHoleRadius(0f);
+
+    }
+
+
     @SuppressLint("DefaultLocale")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -211,7 +245,7 @@ public class HomeFragment extends Fragment {
 
         getActivity().setTitle("Overview");
 
-        yearSummaryCard = view.findViewById(R.id.running_report_card);
+
         yearSummaryText = view.findViewById(R.id.running_report_header);
         yearSummaryDistance = view.findViewById(R.id.running_report_distance);
         yearSummaryRunCount = view.findViewById(R.id.running_report_run_count);
@@ -219,6 +253,8 @@ public class HomeFragment extends Fragment {
         yearAverageRunLength = view.findViewById(R.id.running_report_avg_run_length);
         runTimePieChart = view.findViewById(R.id.time_run_pie_chart);
         distancePerMonthBarChart = view.findViewById(R.id.distance_per_month_bar_chart);
+        paceVsDistanceScatterChart = view.findViewById(R.id.pace_vs_distance_scatter_chart);
+
 
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -228,7 +264,7 @@ public class HomeFragment extends Fragment {
 
         InitPieChart();
         InitBarChart();
-
+        InitScatterChart();
 
         yearSummaryRunCount.setText("Total runs:");
         yearSummaryDistance.setText("Total miles run:");
@@ -317,6 +353,84 @@ public class HomeFragment extends Fragment {
         distancePerMonthBarChart.animateY(1000, Easing.EaseInOutQuad);
 
     }
+
+    private void InitScatterChart() {
+
+        XAxis xAxis = paceVsDistanceScatterChart.getXAxis();
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawLabels(true);
+        xAxis.setDrawLimitLinesBehindData(false);
+        xAxis.setDrawGridLinesBehindData(false);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawLabels(true);
+        xAxis.setDrawLimitLinesBehindData(false);
+        xAxis.setDrawGridLinesBehindData(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+        xAxis.setGranularityEnabled(true);
+        xAxis.setLabelCount(10);
+        xAxis.setTextColor(Color.parseColor("#EFEFEF"));
+
+
+        YAxis yAxisLeft = paceVsDistanceScatterChart.getAxisLeft();
+        yAxisLeft.setDrawLabels(true);
+        yAxisLeft.setLabelCount(6);
+
+
+        yAxisLeft.setDrawGridLines(false);
+        yAxisLeft.setDrawAxisLine(true);
+        yAxisLeft.setDrawZeroLine(false);
+        yAxisLeft.setInverted(true);
+        yAxisLeft.setDrawTopYLabelEntry(false);
+        yAxisLeft.setDrawLimitLinesBehindData(false);
+        yAxisLeft.setDrawGridLinesBehindData(false);
+        yAxisLeft.setDrawZeroLine(false);
+        yAxisLeft.setTextColor(Color.parseColor("#EFEFEF"));
+
+        YAxis yAxisRight = paceVsDistanceScatterChart.getAxisRight();
+        yAxisRight.setEnabled(false);
+
+
+        paceVsDistanceScatterChart.setDrawGridBackground(false);
+        paceVsDistanceScatterChart.setDrawBorders(false);
+        paceVsDistanceScatterChart.setDrawMarkers(false);
+        paceVsDistanceScatterChart.setDrawGridBackground(false);
+        paceVsDistanceScatterChart.setDrawBorders(false);
+        paceVsDistanceScatterChart.setDrawMarkers(false);
+
+        paceVsDistanceScatterChart.setTouchEnabled(false);
+        paceVsDistanceScatterChart.setDragEnabled(false);
+        paceVsDistanceScatterChart.setScaleEnabled(false);
+        paceVsDistanceScatterChart.setPinchZoom(false);
+        paceVsDistanceScatterChart.setDoubleTapToZoomEnabled(false);
+        paceVsDistanceScatterChart.setHighlightPerDragEnabled(false);
+        paceVsDistanceScatterChart.setHighlightPerTapEnabled(false);
+        paceVsDistanceScatterChart.setHighlightPerDragEnabled(false);
+        paceVsDistanceScatterChart.setHighlightPerTapEnabled(false);
+        paceVsDistanceScatterChart.setDescription(null);
+        paceVsDistanceScatterChart.getLegend().setEnabled(true);
+        //get ride of colorbar
+        paceVsDistanceScatterChart.getLegend().setForm(Legend.LegendForm.NONE);
+        paceVsDistanceScatterChart.getLegend().setTextColor(Color.parseColor("#EFEFEF"));
+        paceVsDistanceScatterChart.getLegend().setTextSize(12f);
+        paceVsDistanceScatterChart.getLegend().setFormSize(12f);
+        paceVsDistanceScatterChart.getLegend().setFormToTextSpace(1f);
+        paceVsDistanceScatterChart.getLegend().setWordWrapEnabled(true);
+        paceVsDistanceScatterChart.getLegend().setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        paceVsDistanceScatterChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        paceVsDistanceScatterChart.getLegend().setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        paceVsDistanceScatterChart.getLegend().setDrawInside(false);
+
+        paceVsDistanceScatterChart.getLegend().setXEntrySpace(15f);
+        paceVsDistanceScatterChart.getLegend().setYEntrySpace(100f);
+
+
+
+
+        paceVsDistanceScatterChart.invalidate();
+        paceVsDistanceScatterChart.animateXY(1000, 1000);
+    }
+
 
 
 

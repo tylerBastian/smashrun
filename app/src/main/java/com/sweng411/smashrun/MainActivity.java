@@ -177,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refreshBtn:
-                getAllActivities();
                 return true;
         }
         return super.onOptionsItemSelected(item);

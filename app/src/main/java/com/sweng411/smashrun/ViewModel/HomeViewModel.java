@@ -1,6 +1,7 @@
 package com.sweng411.smashrun.ViewModel;
 
 import android.os.Build;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -11,11 +12,17 @@ import com.sweng411.smashrun.Model.Run;
 import com.sweng411.smashrun.Repo.SmashRunRepository;
 import com.sweng411.smashrun.State.DistancePerMonthBarChartState;
 import com.sweng411.smashrun.State.RunTimePieChartState;
+import com.sweng411.smashrun.State.ScatterPlotEntry;
 import com.sweng411.smashrun.State.YearSummaryUiState;
 
+import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,7 +34,7 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<DistancePerMonthBarChartState> distancePerMonthBarChartStateMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<RunTimePieChartState> runTimePieChartStateMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<YearSummaryUiState> yearSummaryLiveData = new MutableLiveData<>();
-
+    private final MutableLiveData<ArrayList<ScatterPlotEntry>> scatterPlotLiveData = new MutableLiveData<>();
 
     public LiveData<YearSummaryUiState> GetYearSummaryState() {
         repository.GetYearlyStats(yearSummary -> {
@@ -66,6 +73,44 @@ public class HomeViewModel extends ViewModel {
         }, false);
 
         return distancePerMonthBarChartStateMutableLiveData;
+    }
+
+    public LiveData<ArrayList<ScatterPlotEntry>> GetScatterPlotEntries() {
+        repository.GetRuns(runs -> {
+            ArrayList<ScatterPlotEntry> entries = new ArrayList<>();
+
+            for (Run run:
+                 runs) {
+                ScatterPlotEntry entry = new ScatterPlotEntry();
+
+                //Checks if date is within last 12 Months, if not it skips the run
+                try {
+                    Date dateObj = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(run.Date);
+                    String date = new SimpleDateFormat("MM/dd/yy").format(dateObj);
+                    if(!isDateInLast12Months(date)) {
+                        continue;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+
+                entry.Distance = run.Distance;
+                entry.Pace = run.Duration / run.Distance;
+                entries.add(entry);
+            }
+
+            //This checks if on main thread and sets the live data accordingly
+            if(Looper.myLooper() == Looper.getMainLooper()) {
+                scatterPlotLiveData.setValue(entries);
+            }
+            else {
+                scatterPlotLiveData.postValue(entries);
+            }
+        }, false);
+
+        return scatterPlotLiveData;
     }
 
 
@@ -152,4 +197,24 @@ public class HomeViewModel extends ViewModel {
         }
         return sortedMap;
     }
+
+    private boolean isDateInLast12Months(String date) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -12);
+        Date twelveMonthsAgo = cal.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+        String twelveMonthsAgoStr = sdf.format(twelveMonthsAgo);
+        Log.d("twelveMonthsAgo", twelveMonthsAgoStr);
+        try {
+            Date dateObj = sdf.parse(date);
+            Date twelveMonthsAgoObj = sdf.parse(twelveMonthsAgoStr);
+            if (dateObj.after(twelveMonthsAgoObj)) {
+                return true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
