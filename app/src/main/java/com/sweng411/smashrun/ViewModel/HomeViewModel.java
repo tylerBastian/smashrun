@@ -30,13 +30,22 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HomeViewModel extends ViewModel {
+    private static DistancePerMonthBarChartState storedBarChartState;
+    private static RunTimePieChartState storedPieChartState;
+    private static YearSummaryUiState storedYearSummaryState;
+    private static ArrayList<ScatterPlotEntry> storedScatterState;
+
     private SmashRunRepository repository = SmashRunRepository.GetInstance();
     private final MutableLiveData<DistancePerMonthBarChartState> distancePerMonthBarChartStateMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<RunTimePieChartState> runTimePieChartStateMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<YearSummaryUiState> yearSummaryLiveData = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<ScatterPlotEntry>> scatterPlotLiveData = new MutableLiveData<>();
 
-    public LiveData<YearSummaryUiState> GetYearSummaryState() {
+    public LiveData<YearSummaryUiState> GetYearSummaryState(boolean refresh) {
+        if(!refresh && storedYearSummaryState != null) {
+            yearSummaryLiveData.setValue(storedYearSummaryState);
+            return  yearSummaryLiveData;
+        }
         repository.GetYearlyStats(yearSummary -> {
             YearSummaryUiState yearSummaryUiState = new YearSummaryUiState();
 
@@ -52,7 +61,12 @@ public class HomeViewModel extends ViewModel {
         return yearSummaryLiveData;
     }
 
-    public LiveData<RunTimePieChartState> GetPieChartState() {
+    public LiveData<RunTimePieChartState> GetPieChartState(boolean refresh) {
+        if(!refresh && storedPieChartState != null) {
+            runTimePieChartStateMutableLiveData.setValue(storedPieChartState);
+            return runTimePieChartStateMutableLiveData;
+        }
+
         repository.GetYearlyStats(stats ->{
             RunTimePieChartState state = new RunTimePieChartState();
             state.AM = stats.AmRuns;
@@ -62,20 +76,27 @@ public class HomeViewModel extends ViewModel {
         return runTimePieChartStateMutableLiveData;
     }
 
-    public LiveData<DistancePerMonthBarChartState> GetDistancePerMonthState() {
-
+    public LiveData<DistancePerMonthBarChartState> GetDistancePerMonthState(boolean refresh) {
+        if(!refresh && storedBarChartState != null) {
+            distancePerMonthBarChartStateMutableLiveData.setValue(storedBarChartState);
+            return  distancePerMonthBarChartStateMutableLiveData;
+        }
         repository.GetRuns(runs -> {
             DistancePerMonthBarChartState state = new DistancePerMonthBarChartState();
 
 
             state.DistancePerMonthMap = getDistancePerMonth(runs);
             distancePerMonthBarChartStateMutableLiveData.postValue(state);
-        }, false);
+        });
 
         return distancePerMonthBarChartStateMutableLiveData;
     }
 
-    public LiveData<ArrayList<ScatterPlotEntry>> GetScatterPlotEntries() {
+    public LiveData<ArrayList<ScatterPlotEntry>> GetScatterPlotEntries(boolean refresh) {
+        if(!refresh && storedScatterState != null) {
+            scatterPlotLiveData.setValue(storedScatterState);
+            return scatterPlotLiveData;
+        }
         repository.GetRuns(runs -> {
             ArrayList<ScatterPlotEntry> entries = new ArrayList<>();
 
@@ -101,14 +122,9 @@ public class HomeViewModel extends ViewModel {
                 entries.add(entry);
             }
 
-            //This checks if on main thread and sets the live data accordingly
-            if(Looper.myLooper() == Looper.getMainLooper()) {
-                scatterPlotLiveData.setValue(entries);
-            }
-            else {
-                scatterPlotLiveData.postValue(entries);
-            }
-        }, false);
+            scatterPlotLiveData.postValue(entries);
+
+        });
 
         return scatterPlotLiveData;
     }

@@ -53,7 +53,7 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-
+    private static final String TAG = "Home";
     private HomeViewModel viewModel;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -71,29 +71,14 @@ public class HomeFragment extends Fragment {
     private ScatterChart paceVsDistanceScatterChart;
 
 
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public HomeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static HomeFragment NewInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -101,22 +86,27 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        viewModel.GetPieChartState().observe(this, state -> {
+        viewModel.GetPieChartState(false).observe(this, state -> {
+            Log.d(TAG, "Updating PieChart");
             UpdatePieChart(state);
         });
-        viewModel.GetDistancePerMonthState().observe(this, state ->{
+        viewModel.GetDistancePerMonthState(false).observe(this, state ->{
+            Log.d(TAG, "Updating BarChart");
             UpdateBarChart(state);
         });
-        viewModel.GetYearSummaryState().observe(this, state -> {
+        viewModel.GetYearSummaryState(false).observe(this, state -> {
+            Log.d(TAG, "Updating YearSummary");
+
             UpdateYearSummary(state);
         });
-        viewModel.GetScatterPlotEntries().observe(this, state -> UpdateScatterChart(state));
+        viewModel.GetScatterPlotEntries(false).observe(this, state ->
+        {
+            Log.d(TAG, "Updating Scatter");
+            UpdateScatterChart(state);
+
+        });
 
     }
 
@@ -227,12 +217,13 @@ public class HomeFragment extends Fragment {
 
         ScatterDataSet paceVsDistanceScatterDataSet = new ScatterDataSet(scatterEntries, "Miles");
         ScatterData paceVsDistanceScatterData = new ScatterData(paceVsDistanceScatterDataSet);
-        paceVsDistanceScatterChart.setData(paceVsDistanceScatterData);
         paceVsDistanceScatterDataSet.setColors(colors);
         paceVsDistanceScatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
         paceVsDistanceScatterDataSet.setScatterShapeSize(20f);
         paceVsDistanceScatterDataSet.setDrawValues(false);
         paceVsDistanceScatterDataSet.setScatterShapeHoleRadius(0f);
+        paceVsDistanceScatterChart.setData(paceVsDistanceScatterData);
+
 
     }
 

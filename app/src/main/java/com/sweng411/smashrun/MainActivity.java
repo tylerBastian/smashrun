@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         //Bottom Navigation
         bottomNavigationView = findViewById(R.id.bottom_nav_view);
         //Initial Fragment
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override

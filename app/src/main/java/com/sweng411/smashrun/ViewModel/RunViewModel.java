@@ -20,11 +20,22 @@ import java.util.Date;
 import java.util.List;
 
 public class RunViewModel extends ViewModel {
+    private static final String TAG = "RVM";
+    private static List<UserRunUiState> storedRuns = null;
+
+
     private SmashRunRepository repository = SmashRunRepository.GetInstance();
     private final MutableLiveData<List<UserRunUiState>> userLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
-    public LiveData<List<UserRunUiState>> GetUserRunsState() {
+
+    public LiveData<List<UserRunUiState>> GetUserRunsState(boolean refresh) {
+
+        //Uses cached data
+        if(!refresh && storedRuns != null) {
+            userLiveData.setValue(storedRuns);
+            return userLiveData;
+        }
 
         //Grabs data from repo using a callback
         repository.GetRuns(runs -> {
@@ -57,13 +68,9 @@ public class RunViewModel extends ViewModel {
 
             //Live data is a way to update UI after it received the initial variable
             //This checks if on main thread and sets the live data accordingly
-            if(Looper.myLooper() == Looper.getMainLooper()) {
-                userLiveData.setValue(states);
-            }
-            else {
-                userLiveData.postValue(states);
-            }
-        }, false);
+            storedRuns = states;
+            userLiveData.postValue(states);
+        });
 
         //Returns initial live data variable for UI to consume
         return userLiveData;

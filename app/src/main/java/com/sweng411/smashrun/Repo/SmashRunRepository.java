@@ -5,10 +5,13 @@ package com.sweng411.smashrun.Repo;
 
 import static com.sweng411.smashrun.MainActivity.getSharedPref;
 
+import android.app.Application;
 import android.util.Log;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
+import com.sweng411.smashrun.App;
 import com.sweng411.smashrun.Model.Run;
 import com.sweng411.smashrun.Model.YearSummary;
 import com.sweng411.smashrun.RepoCallback;
@@ -17,10 +20,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -31,31 +36,34 @@ import okhttp3.Response;
 
 
 public class SmashRunRepository {
-    private static final SmashRunRepository instance = new SmashRunRepository();
+    private static final String TAG = "Repo";
+    private static SmashRunRepository instance;
 
     private OkHttpClient httpClient;
 
     private SmashRunRepository() {
+        instance = this;
+
         httpClient = new OkHttpClient();
     }
 
 
-    private ArrayList<Run> runs = null;
-    private YearSummary yearSummary = null;
+
 
     public static SmashRunRepository GetInstance() {
+        if(instance == null) {
+            new SmashRunRepository();
+        }
         return instance;
     }
 
     //Gets All Runs of a user, can be changed to take a parameter for only a certain amount
-    public void GetRuns(RepoCallback<ArrayList<Run>> callback, boolean refresh) {
+    public void GetRuns(RepoCallback<ArrayList<Run>> callback) {
 
-        //Check
-        if(!refresh && runs != null) {
-            callback.HandleRepoData(runs);
-            return;
-        }
+        ArrayList<Run> runs = new ArrayList<>();
 
+        Log.d(TAG, "Fetching Runs");
+        Log.d(TAG, Log.getStackTraceString(new Throwable("message")));
         String url = "https://api.smashrun.com/v1/my/activities";
         String token = getSharedPref().getString("token", "");
         okhttp3.Request request = new okhttp3.Request.Builder()
@@ -64,7 +72,6 @@ public class SmashRunRepository {
                 .build();
 
 
-        runs = new ArrayList<>();
         httpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
