@@ -40,7 +40,7 @@ public class HomeViewModel extends ViewModel {
         repository.GetYearlyStats(yearSummary -> {
             YearSummaryUiState yearSummaryUiState = new YearSummaryUiState();
 
-            yearSummaryUiState.TotalDistance = String.valueOf(yearSummary.Distance);
+            yearSummaryUiState.TotalDistance = String.format("%.2f", yearSummary.Distance * 0.621371);
             yearSummaryUiState.TotalRunCount = String.valueOf(yearSummary.RunCount);
             yearSummaryUiState.AveragePace = minPerKmtoMinPerMile(yearSummary.AveragePace);
             //Why is this multiplied by 0.621
@@ -96,8 +96,8 @@ public class HomeViewModel extends ViewModel {
 
 
 
-                entry.Distance = run.Distance;
-                entry.Pace = run.Duration / run.Distance;
+                entry.Distance = run.Distance * Float.parseFloat("0.621371");
+                entry.Pace = run.Duration / (run.Distance * Float.parseFloat("0.621371"));
                 entries.add(entry);
             }
 

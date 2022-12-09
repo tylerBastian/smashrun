@@ -37,8 +37,8 @@ public class RunViewModel extends ViewModel {
                 state.calories = String.valueOf(run.Calories);
                 state.distance = String.format("%.2f", (run.Distance * 0.621371));
                 state.duration =  DateUtils.formatElapsedTime((long) run.Duration);
-                String pace =  String.valueOf(run.Duration/run.Distance);
-                state.pace =  String.format("%.2f", Float.parseFloat(pace));
+                String pace =  String.valueOf(run.Duration/(run.Distance * 0.621371));
+                state.pace = DateUtils.formatElapsedTime((long) Double.parseDouble(pace));
                 Log.d("RVM", "Model Calories: " + run.Calories);
                 Log.d("RVM","State Calories: " + state.calories);
 
