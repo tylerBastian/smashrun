@@ -1,6 +1,7 @@
 package com.sweng411.smashrun.ViewModel;
 
 
+import android.os.Looper;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -55,7 +56,13 @@ public class RunViewModel extends ViewModel {
             }
 
             //Live data is a way to update UI after it received the initial variable
-            userLiveData.postValue(states);
+            //This checks if on main thread and sets the live data accordingly
+            if(Looper.myLooper() == Looper.getMainLooper()) {
+                userLiveData.setValue(states);
+            }
+            else {
+                userLiveData.postValue(states);
+            }
         }, false);
 
         //Returns initial live data variable for UI to consume
