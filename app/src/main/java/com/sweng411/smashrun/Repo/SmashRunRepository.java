@@ -1,3 +1,5 @@
+
+
 package com.sweng411.smashrun.Repo;
 
 
@@ -24,8 +26,10 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
-
 //Uses Singleton pattern, only needs to be one and is easy way to access it
+
+
+
 public class SmashRunRepository {
     private static final SmashRunRepository instance = new SmashRunRepository();
 

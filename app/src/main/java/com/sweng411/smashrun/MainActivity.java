@@ -19,22 +19,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Protocol;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
 
 //gVN65rU@c5tc
 public class MainActivity extends AppCompatActivity {
@@ -42,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private  Toolbar myToolbar;
     private DrawerLayout myDrawerLayout;
     private BottomNavigationView bottomNavigationView;
-    private HomeFragment homeFragment;
-
     private static SharedPreferences sharedPref;
 
 
@@ -67,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Auth", "Token from Main: " + token);
 
         if (token.equals("")) {
-            sendToLoginActivity();
+            SendToLoginActivity();
         }
 
         //Toolbar and Navigation Drawer
@@ -104,10 +90,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        homeFragment = new HomeFragment();
         //Bottom Navigation
         bottomNavigationView = findViewById(R.id.bottom_nav_view);
-        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, homeFragment).commit();
+        //Initial Fragment
+        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -137,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void sendToLoginActivity() {
+    private void SendToLoginActivity() {
         Log.d("Main", "Sending To Login Activity");
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(loginIntent);
@@ -170,13 +156,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void logout(View view) {
-        SharedPreferences.Editor editor = getSharedPref().edit();
+        SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("token", "");
         editor.putString("auth", "");
         editor.apply();
         //This is to make it so you have to re input your login stuff on their webpage, mostly for testing purposes
         clearCookies(view.getContext());
-        sendToLoginActivity();
+        SendToLoginActivity();
     }
 
 

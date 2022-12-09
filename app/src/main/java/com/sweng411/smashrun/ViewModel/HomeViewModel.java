@@ -29,7 +29,7 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<YearSummaryUiState> yearSummaryLiveData = new MutableLiveData<>();
 
 
-    public LiveData<YearSummaryUiState> GetYearSummary() {
+    public LiveData<YearSummaryUiState> GetYearSummaryState() {
         repository.GetYearlyStats(yearSummary -> {
             YearSummaryUiState yearSummaryUiState = new YearSummaryUiState();
 

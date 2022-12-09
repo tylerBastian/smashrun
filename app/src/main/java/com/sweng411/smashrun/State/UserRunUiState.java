@@ -1,3 +1,4 @@
+
 package com.sweng411.smashrun.State;
 
 public class UserRunUiState {

@@ -106,7 +106,7 @@ public class HomeFragment extends Fragment {
         viewModel.GetDistancePerMonthState().observe(this, state ->{
             UpdateBarChart(state);
         });
-        viewModel.GetYearSummary().observe(this, state -> {
+        viewModel.GetYearSummaryState().observe(this, state -> {
             UpdateYearSummary(state);
         });
 
