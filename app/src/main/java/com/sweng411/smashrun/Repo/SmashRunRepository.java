@@ -5,13 +5,11 @@ package com.sweng411.smashrun.Repo;
 
 import static com.sweng411.smashrun.MainActivity.getSharedPref;
 
-import android.app.Application;
 import android.util.Log;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
-import com.sweng411.smashrun.App;
+import com.sweng411.smashrun.Model.Badge;
 import com.sweng411.smashrun.Model.Run;
 import com.sweng411.smashrun.Model.YearSummary;
 import com.sweng411.smashrun.RepoCallback;
@@ -20,12 +18,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -189,6 +185,72 @@ public class SmashRunRepository {
         userRun.Duration = (float) userRunJson.optDouble("duration", 0);
         userRun.Date= userRunJson.optString("startDateTimeLocal");
         return userRun;
+    }
+
+    Badge CreateBadgeFromJson(JSONObject badgeJson) {
+        Badge badge = new Badge();
+
+        badge.id = badgeJson.optInt("badgeId", 0);
+        badge.name = badgeJson.optString("name");
+        badge.image = badgeJson.optString("image");
+        badge.imageSmall = badgeJson.optString("imageSmall");
+        badge.requirement = badgeJson.optString("requirement");
+        badge.dateEarnedUTC = badgeJson.optString("dateEarnedUTC");
+        badge.badgeOrder = badgeJson.optInt("badgeOrder", 0);
+
+        return badge;
+    }
+
+
+
+    public void GetBadges(RepoCallback<ArrayList<Badge>> callback){
+        ArrayList<Badge> badges = new ArrayList<>();
+
+        Log.d(TAG, "Fetching Badges");
+        Log.d(TAG, Log.getStackTraceString(new Throwable("message")));
+        String url = "https://api.smashrun.com/v1/my/badges";
+        String token = getSharedPref().getString("token", "");
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                Log.d("onFailure", "failure");
+                //Might as well send something back
+                callback.HandleRepoData(badges);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("onResponse", "entered");
+                if (response.isSuccessful()) {
+                    Log.d("onResponse", "success");
+                    JSONArray responseJSON;
+                    try {
+                        responseJSON = new JSONArray(response.body().string());
+                        Log.d("json", responseJSON.toString());
+                        for (int i = 0; i < responseJSON.length(); i++) {
+
+                            badges.add(CreateBadgeFromJson(responseJSON.getJSONObject(i)));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                //This calls the ViewModel back to let it know it can use the data
+                callback.HandleRepoData(badges);
+
+            }
+        });
+
+
     }
 
 

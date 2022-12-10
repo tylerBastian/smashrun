@@ -3,10 +3,20 @@ package com.sweng411.smashrun;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.sweng411.smashrun.State.UserBadgeUiState;
+import com.sweng411.smashrun.ViewModel.BadgeViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +33,8 @@ public class BadgesFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private BadgeViewModel viewModel;
+    private RecyclerView mRecyclerView;
 
     public BadgesFragment() {
         // Required empty public constructor
@@ -40,8 +52,6 @@ public class BadgesFragment extends Fragment {
     public static BadgesFragment newInstance(String param1, String param2) {
         BadgesFragment fragment = new BadgesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,10 +59,11 @@ public class BadgesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        viewModel = new ViewModelProvider(this).get(BadgeViewModel.class);
+
+        viewModel.GetBadgesState(false).observe(this, (List<UserBadgeUiState> userBadges) -> {
+            InitRecyclerView(userBadges);
+        });
     }
 
     @Override
@@ -60,9 +71,18 @@ public class BadgesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_badges, container, false);
+        mRecyclerView = view.findViewById(R.id.badgesList);
 
         getActivity().setTitle("Badges Earned");
 
         return view;
+    }
+
+    private void InitRecyclerView(List<UserBadgeUiState> badges) {
+        BadgeListAdapter adapter = new BadgeListAdapter(getContext(), badges);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setHasFixedSize(true);
     }
 }
