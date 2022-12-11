@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import com.sweng411.smashrun.Model.Run;
 import com.sweng411.smashrun.State.UserRunUiState;
@@ -36,6 +37,7 @@ public class AddRunFragment extends Fragment {
     private EditText duration;
     private Button addRunButton;
     private Button resetButton;
+    private RelativeLayout addRunLayout;
 
     private AddRunViewModel viewModel;
     public AddRunFragment() {
@@ -62,6 +64,14 @@ public class AddRunFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_run, container, false);
 
         getActivity().setTitle("Add New Run");
+        addRunLayout = view.findViewById(R.id.add_run_parent_layout);
+        addRunLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //hide current fragment
+                getActivity().getSupportFragmentManager().beginTransaction().remove(AddRunFragment.this).commit();
+            }
+        });
 
         date = view.findViewById(R.id.date_edit);
         date.setOnClickListener(new View.OnClickListener() {
