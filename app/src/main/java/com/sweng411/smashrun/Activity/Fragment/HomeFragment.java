@@ -1,10 +1,9 @@
-package com.sweng411.smashrun;
+package com.sweng411.smashrun.Activity.Fragment;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,7 @@ import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.google.android.material.card.MaterialCardView;
+import com.sweng411.smashrun.R;
 import com.sweng411.smashrun.State.DistancePerMonthBarChartState;
 import com.sweng411.smashrun.State.RunTimePieChartState;
 import com.sweng411.smashrun.State.ScatterPlotEntry;

@@ -18,7 +18,7 @@ import java.util.List;
 // Note that we specify the custom ViewHolder which gives us access to our views
 public class RunListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    interface ListItemClickListener {
+    public interface ListItemClickListener {
         void onListItemClick(int position);
     }
 

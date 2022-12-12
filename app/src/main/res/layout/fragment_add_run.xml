@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".AddRunFragment"
+    tools:context=".Activity.Fragment.AddRunFragment"
+
     android:paddingTop="50dp"
     android:background="@color/lowAlphaBackground"
     android:id="@+id/add_run_parent_layout"
@@ -20,7 +21,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
 
-        app:cardBackgroundColor="@color/addRunCardBackground"
+
         app:cardCornerRadius="15dp"
         app:strokeColor="@color/bottomNavBackground"
         app:strokeWidth="3dp"

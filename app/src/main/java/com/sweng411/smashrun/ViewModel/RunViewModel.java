@@ -63,6 +63,8 @@ public class RunViewModel extends ViewModel {
                 String dateStr = new SimpleDateFormat("MM/dd/yy").format(dateObj);
 
                 state.date = dateStr;
+
+                state.time   = new SimpleDateFormat("HH:mm").format(dateObj);
                 states.add(state);
             }
 

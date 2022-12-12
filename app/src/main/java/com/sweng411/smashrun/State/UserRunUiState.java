@@ -7,4 +7,5 @@ public class UserRunUiState {
     public String duration;
     public String pace;
     public String calories;
+    public String time;
 }

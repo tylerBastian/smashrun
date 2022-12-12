@@ -1,6 +1,7 @@
-package com.sweng411.smashrun;
+package com.sweng411.smashrun.Activity.Fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,10 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sweng411.smashrun.R;
+import com.sweng411.smashrun.RunListAdapter;
 import com.sweng411.smashrun.State.UserRunUiState;
 import com.sweng411.smashrun.ViewModel.RunViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,7 +27,7 @@ import java.util.List;
  * Use the {@link RunsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RunsFragment extends Fragment implements RunListAdapter.ListItemClickListener{
+public class RunsFragment extends Fragment implements RunListAdapter.ListItemClickListener {
 
 
     private RecyclerView mRecyclerView;
@@ -91,6 +93,7 @@ public class RunsFragment extends Fragment implements RunListAdapter.ListItemCli
     public void onListItemClick(int position) {
 
         Log.d("Test", runs.get(position).date);
+        EditRunFragment.newInstance(runs.get(position)).show(getChildFragmentManager(), null);
     }
 }
 

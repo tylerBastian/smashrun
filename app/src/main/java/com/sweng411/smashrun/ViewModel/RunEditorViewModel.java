@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import com.sweng411.smashrun.Model.Run;
 import com.sweng411.smashrun.Repo.SmashRunRepository;
 
-public class AddRunViewModel extends ViewModel {
+public class RunEditorViewModel extends ViewModel {
 
     SmashRunRepository repository = SmashRunRepository.GetInstance();
 

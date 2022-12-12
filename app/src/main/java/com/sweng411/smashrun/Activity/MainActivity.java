@@ -1,4 +1,4 @@
-package com.sweng411.smashrun;
+package com.sweng411.smashrun.Activity;
 
 import static java.lang.Thread.sleep;
 
@@ -24,6 +24,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+import com.sweng411.smashrun.Activity.Fragment.AddRunFragment;
+import com.sweng411.smashrun.Activity.Fragment.BadgesFragment;
+import com.sweng411.smashrun.Activity.Fragment.HomeFragment;
+import com.sweng411.smashrun.Activity.Fragment.ProfileFragment;
+import com.sweng411.smashrun.R;
+import com.sweng411.smashrun.Activity.Fragment.RunsFragment;
 
 //gVN65rU@c5tc
 public class MainActivity extends AppCompatActivity{

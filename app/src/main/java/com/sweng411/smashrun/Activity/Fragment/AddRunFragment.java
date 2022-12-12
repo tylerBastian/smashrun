@@ -1,13 +1,11 @@
-package com.sweng411.smashrun;
+package com.sweng411.smashrun.Activity.Fragment;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +15,10 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import com.sweng411.smashrun.Model.Run;
-import com.sweng411.smashrun.State.UserRunUiState;
-import com.sweng411.smashrun.ViewModel.AddRunViewModel;
-import com.sweng411.smashrun.ViewModel.RunViewModel;
+import com.sweng411.smashrun.R;
+import com.sweng411.smashrun.ViewModel.RunEditorViewModel;
 
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,7 +35,7 @@ public class AddRunFragment extends Fragment {
     private Button resetButton;
     private RelativeLayout addRunLayout;
 
-    private AddRunViewModel viewModel;
+    private RunEditorViewModel viewModel;
     public AddRunFragment() {
         // Required empty public constructor
     }
@@ -54,7 +50,7 @@ public class AddRunFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(AddRunViewModel.class);
+        viewModel = new ViewModelProvider(this).get(RunEditorViewModel.class);
     }
 
     @Override

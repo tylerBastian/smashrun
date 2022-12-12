@@ -3,7 +3,7 @@
 package com.sweng411.smashrun.Repo;
 
 
-import static com.sweng411.smashrun.MainActivity.getSharedPref;
+import static com.sweng411.smashrun.Activity.MainActivity.getSharedPref;
 
 import android.util.Log;
 
@@ -59,7 +59,6 @@ public class SmashRunRepository {
         ArrayList<Run> runs = new ArrayList<>();
 
         Log.d(TAG, "Fetching Runs");
-        Log.d(TAG, Log.getStackTraceString(new Throwable("message")));
         String url = "https://api.smashrun.com/v1/my/activities";
         String token = getSharedPref().getString("token", "");
         okhttp3.Request request = new okhttp3.Request.Builder()
