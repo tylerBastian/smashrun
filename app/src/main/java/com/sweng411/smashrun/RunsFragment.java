@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.sweng411.smashrun.State.UserRunUiState;
 import com.sweng411.smashrun.ViewModel.RunViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,16 +25,17 @@ import java.util.List;
  * Use the {@link RunsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RunsFragment extends Fragment {
+public class RunsFragment extends Fragment implements RunListAdapter.ListItemClickListener{
 
 
     private RecyclerView mRecyclerView;
 
-
+    private  RunListAdapter runsListAdapter;
     private RunViewModel viewModel;
 
     private static final String TAG = "ListFragment";
 
+    List<UserRunUiState> runs;
 
     public RunsFragment() {
         // Required empty public constructor
@@ -57,8 +59,6 @@ public class RunsFragment extends Fragment {
         viewModel.GetUserRunsState(false).observe(this, (List<UserRunUiState> userRuns) -> {
             InitRecyclerView(userRuns);
         });
-
-
     }
 
     @Override
@@ -75,16 +75,22 @@ public class RunsFragment extends Fragment {
 
     private void InitRecyclerView(List<UserRunUiState> runs) {
         //Sets up the data when it is received from the ViewModel
+        this.runs = runs;
         Log.d(TAG, "Init Recycler View");
 
-        RunListAdapter mAdapter = new RunListAdapter(getContext(), runs);
+        runsListAdapter = new RunListAdapter(getContext(), runs, this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(runsListAdapter);
+
     }
 
 
+    @Override
+    public void onListItemClick(int position) {
 
+        Log.d("Test", runs.get(position).date);
+    }
 }
 

@@ -26,7 +26,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 //gVN65rU@c5tc
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private  Toolbar myToolbar;
     private DrawerLayout myDrawerLayout;
