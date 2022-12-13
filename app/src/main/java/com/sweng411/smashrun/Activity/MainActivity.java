@@ -108,19 +108,19 @@ public class MainActivity extends AppCompatActivity{
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.bottomNavHome:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment()).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new HomeFragment(), "home").commit();
                         return true;
                     case R.id.bottomNavRuns:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new RunsFragment()).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new RunsFragment(), "runs").commit();
                         return true;
                     case R.id.bottomNavAddRun:
                         getSupportFragmentManager().beginTransaction().add(R.id.nav_host_fragment, new AddRunFragment()).commit();
                         return true;
                     case R.id.bottomNavBadges:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new BadgesFragment()).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new BadgesFragment(), "badges").commit();
                         return true;
                     case R.id.bottomNavProfile:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ProfileFragment()).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ProfileFragment(), "profile").commit();
                         return true;
                 }
                 return false;
@@ -185,7 +185,15 @@ public class MainActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refreshBtn:
-                return true;
+                HomeFragment home = (HomeFragment) getSupportFragmentManager().findFragmentByTag("home");
+                if(home != null && home.isVisible()) {
+                    home.Refresh();
+                }
+                RunsFragment run = (RunsFragment) getSupportFragmentManager().findFragmentByTag("runs");
+                if(run != null && run.isVisible()) {
+                    run.Refresh();
+                }
+
         }
         return super.onOptionsItemSelected(item);
     }
