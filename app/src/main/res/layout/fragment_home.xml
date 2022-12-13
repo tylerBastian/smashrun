@@ -1,162 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    android:fillViewport="true">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/running_report_card"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="5dp"
-        android:padding="5dp"
-        android:paddingBottom="0dp"
-        app:cardBackgroundColor="@color/listCardBackground"
-        app:cardCornerRadius="4dp">
+        android:layout_height="match_parent"
+        tools:context="com.example.ralf.gpstelephony.TelephonyManagerFragment">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:context=".Activity.Fragment.HomeFragment"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="-69dp">
 
-            <TextView
-                android:id="@+id/running_report_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:layout_centerInParent="true"
-                android:layout_alignParentTop="true"
-                android:text="Year Summary"
-                android:textColor="@color/textColorWhite"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:textAlignment="center">
-            </TextView>
-
-            <TextView
-                android:id="@+id/running_report_run_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/running_report_header"
-                android:paddingTop="10dp"
-                android:paddingLeft="10dp"
-                android:layout_margin="2dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="1dp"
-                android:text="Total Runs: "
-                android:textColor="@color/textColorWhite"
-                android:textSize="17sp">
-            </TextView>
-
-            <TextView
-                android:id="@+id/running_report_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/running_report_run_count"
-                android:paddingTop="5dp"
-                android:paddingLeft="10dp"
-                android:layout_margin="2dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="1dp"
-                android:text="Total Distance: "
-                android:textColor="@color/textColorWhite"
-                android:textSize="17sp">
-            </TextView>
-
-            <TextView
-                android:id="@+id/running_report_pace"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/running_report_distance"
-                android:paddingTop="5dp"
-                android:paddingLeft="10dp"
-                android:layout_margin="2dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="1dp"
-                android:text="Average Pace: "
-                android:textColor="@color/textColorWhite"
-                android:textSize="17sp">
-            </TextView>
-
-            <TextView
-                android:id="@+id/running_report_avg_run_length"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/running_report_pace"
-                android:paddingTop="5dp"
-                android:paddingLeft="10dp"
-                android:layout_margin="2dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="5dp"
-                android:text="Average Run Length: "
-                android:textColor="@color/textColorWhite"
-                android:textSize="17sp">
-            </TextView>
-
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/time_run_pie_chart"
-                android:layout_width="195dp"
-                android:layout_height="156dp"
-                android:layout_below="@+id/running_report_header"
-                android:layout_marginLeft="93dp"
-                android:layout_marginTop="2dp"
-                android:layout_toRightOf="@id/running_report_run_count" />
-
-        </RelativeLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/distance_per_month_card"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_below="@+id/running_report_card"
-        android:layout_margin="5dp"
-        android:layout_marginTop="1dp"
-        android:padding="5dp"
-        android:paddingTop="0dp"
-        app:cardBackgroundColor="@color/listCardBackground"
-        app:cardCornerRadius="4dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/distance_per_month_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:layout_centerInParent="true"
-                android:layout_alignParentTop="true"
-                android:text="Distance Per Month (mi)"
-                android:textColor="@color/textColorWhite"
-                android:textSize="25sp"
-                android:textStyle="bold"
-                android:textAlignment="center">
-            </TextView>
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/distance_per_month_bar_chart"
-                android:layout_below="@id/distance_per_month_header"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/running_report_card"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="3dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="1dp"
-                android:paddingRight="1dp" />
+                android:layout_height="200dp"
+                android:layout_margin="5dp"
+                android:padding="5dp"
+                android:paddingBottom="0dp"
+                app:cardBackgroundColor="@color/listCardBackground"
+                app:cardCornerRadius="4dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/running_report_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="2dp"
+                        android:text="Year Summary"
+                        android:textAlignment="center"
+                        android:textColor="@color/textColorWhite"
+                        android:textSize="25sp"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/running_report_run_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/running_report_header"
+                        android:layout_margin="2dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="1dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:text="Total Runs: "
+                        android:textColor="@color/textColorWhite"
+                        android:textSize="17sp"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/running_report_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/running_report_run_count"
+                        android:layout_margin="2dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="1dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:text="Total Distance: "
+                        android:textColor="@color/textColorWhite"
+                        android:textSize="17sp"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/running_report_pace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/running_report_distance"
+                        android:layout_margin="2dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="1dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:text="Average Pace: "
+                        android:textColor="@color/textColorWhite"
+                        android:textSize="17sp"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/running_report_avg_run_length"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/running_report_pace"
+                        android:layout_margin="2dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:text="Average Run Length: "
+                        android:textColor="@color/textColorWhite"
+                        android:textSize="17sp"
+                        android:textStyle="bold"></TextView>
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/time_run_pie_chart"
+                        android:layout_width="195dp"
+                        android:layout_height="156dp"
+                        android:layout_below="@+id/running_report_header"
+                        android:layout_marginLeft="93dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_toRightOf="@id/running_report_run_count" />
+
+                </RelativeLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/distance_per_month_card"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_below="@+id/running_report_card"
+                android:layout_margin="5dp"
+                android:layout_marginTop="1dp"
+                android:padding="5dp"
+                android:paddingTop="0dp"
+                app:cardBackgroundColor="@color/listCardBackground"
+                app:cardCornerRadius="4dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/distance_per_month_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="2dp"
+                        android:text="Distance Per Month (mi)"
+                        android:textAlignment="center"
+                        android:textColor="@color/textColorWhite"
+                        android:textSize="25sp"
+                        android:textStyle="bold"></TextView>
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/distance_per_month_bar_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/distance_per_month_header"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="10dp"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp"
+                        android:paddingBottom="5dp" />
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/pace_vs_distance_card"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@id/distance_per_month_card"
+                android:layout_margin="5dp"
+                android:layout_marginTop="1dp"
+                android:padding="5dp"
+                android:paddingTop="0dp"
+                app:cardBackgroundColor="@color/listCardBackground"
+                app:cardCornerRadius="4dp">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/pace_vs_distance_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="2dp"
+                        android:text="Distance vs Pace"
+                        android:textAlignment="center"
+                        android:textColor="@color/textColorWhite"
+                        android:textSize="25sp"
+                        android:textStyle="bold"></TextView>
+
+                    <com.github.mikephil.charting.charts.ScatterChart
+                        android:id="@+id/pace_vs_distance_scatter_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/pace_vs_distance_header"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginBottom="10dp"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="1dp"
+                        android:paddingBottom="5dp" />
+
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
 
         </RelativeLayout>
-
-
-
-
-    </com.google.android.material.card.MaterialCardView>
-
-
-</RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

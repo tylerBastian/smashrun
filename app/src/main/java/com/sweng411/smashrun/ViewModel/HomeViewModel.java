@@ -1,6 +1,7 @@
 package com.sweng411.smashrun.ViewModel;
 
 import android.os.Build;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -11,11 +12,17 @@ import com.sweng411.smashrun.Model.Run;
 import com.sweng411.smashrun.Repo.SmashRunRepository;
 import com.sweng411.smashrun.State.DistancePerMonthBarChartState;
 import com.sweng411.smashrun.State.RunTimePieChartState;
+import com.sweng411.smashrun.State.ScatterPlotEntry;
 import com.sweng411.smashrun.State.YearSummaryUiState;
 
+import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,17 +30,26 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HomeViewModel extends ViewModel {
+    private static DistancePerMonthBarChartState storedBarChartState;
+    private static RunTimePieChartState storedPieChartState;
+    private static YearSummaryUiState storedYearSummaryState;
+    private static ArrayList<ScatterPlotEntry> storedScatterState;
+
     private SmashRunRepository repository = SmashRunRepository.GetInstance();
     private final MutableLiveData<DistancePerMonthBarChartState> distancePerMonthBarChartStateMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<RunTimePieChartState> runTimePieChartStateMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<YearSummaryUiState> yearSummaryLiveData = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<ScatterPlotEntry>> scatterPlotLiveData = new MutableLiveData<>();
 
-
-    public LiveData<YearSummaryUiState> GetYearSummary() {
+    public LiveData<YearSummaryUiState> GetYearSummaryState(boolean refresh) {
+        if(!refresh && storedYearSummaryState != null) {
+            yearSummaryLiveData.setValue(storedYearSummaryState);
+            return  yearSummaryLiveData;
+        }
         repository.GetYearlyStats(yearSummary -> {
             YearSummaryUiState yearSummaryUiState = new YearSummaryUiState();
 
-            yearSummaryUiState.TotalDistance = String.valueOf(yearSummary.Distance);
+            yearSummaryUiState.TotalDistance = String.format("%.2f", yearSummary.Distance * 0.621371);
             yearSummaryUiState.TotalRunCount = String.valueOf(yearSummary.RunCount);
             yearSummaryUiState.AveragePace = minPerKmtoMinPerMile(yearSummary.AveragePace);
             //Why is this multiplied by 0.621
@@ -45,7 +61,12 @@ public class HomeViewModel extends ViewModel {
         return yearSummaryLiveData;
     }
 
-    public LiveData<RunTimePieChartState> GetPieChartState() {
+    public LiveData<RunTimePieChartState> GetPieChartState(boolean refresh) {
+        if(!refresh && storedPieChartState != null) {
+            runTimePieChartStateMutableLiveData.setValue(storedPieChartState);
+            return runTimePieChartStateMutableLiveData;
+        }
+
         repository.GetYearlyStats(stats ->{
             RunTimePieChartState state = new RunTimePieChartState();
             state.AM = stats.AmRuns;
@@ -55,9 +76,12 @@ public class HomeViewModel extends ViewModel {
         return runTimePieChartStateMutableLiveData;
     }
 
-    public LiveData<DistancePerMonthBarChartState> GetDistancePerMonthState() {
-
-        repository.GetRuns( runs -> {
+    public LiveData<DistancePerMonthBarChartState> GetDistancePerMonthState(boolean refresh) {
+        if(!refresh && storedBarChartState != null) {
+            distancePerMonthBarChartStateMutableLiveData.setValue(storedBarChartState);
+            return  distancePerMonthBarChartStateMutableLiveData;
+        }
+        repository.GetRuns(runs -> {
             DistancePerMonthBarChartState state = new DistancePerMonthBarChartState();
 
 
@@ -66,6 +90,42 @@ public class HomeViewModel extends ViewModel {
         });
 
         return distancePerMonthBarChartStateMutableLiveData;
+    }
+
+    public LiveData<ArrayList<ScatterPlotEntry>> GetScatterPlotEntries(boolean refresh) {
+        if(!refresh && storedScatterState != null) {
+            scatterPlotLiveData.setValue(storedScatterState);
+            return scatterPlotLiveData;
+        }
+        repository.GetRuns(runs -> {
+            ArrayList<ScatterPlotEntry> entries = new ArrayList<>();
+
+            for (Run run: runs) {
+                ScatterPlotEntry entry = new ScatterPlotEntry();
+
+                //Checks if date is within last 12 Months, if not it skips the run
+                try {
+                    Date dateObj = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(run.Date);
+                    String date = new SimpleDateFormat("MM/dd/yy").format(dateObj);
+                    if(!isDateInLast12Months(date)) {
+                        continue;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+
+                entry.Distance = run.Distance * Float.parseFloat("0.621371");
+                entry.Pace = run.Duration / (run.Distance * Float.parseFloat("0.621371"));
+                entries.add(entry);
+            }
+
+            scatterPlotLiveData.postValue(entries);
+
+        });
+
+        return scatterPlotLiveData;
     }
 
 
@@ -152,4 +212,24 @@ public class HomeViewModel extends ViewModel {
         }
         return sortedMap;
     }
+
+    private boolean isDateInLast12Months(String date) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -12);
+        Date twelveMonthsAgo = cal.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+        String twelveMonthsAgoStr = sdf.format(twelveMonthsAgo);
+        Log.d("twelveMonthsAgo", twelveMonthsAgoStr);
+        try {
+            Date dateObj = sdf.parse(date);
+            Date twelveMonthsAgoObj = sdf.parse(twelveMonthsAgoStr);
+            if (dateObj.after(twelveMonthsAgoObj)) {
+                return true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

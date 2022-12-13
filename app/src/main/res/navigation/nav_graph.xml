@@ -6,22 +6,22 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.sweng411.smashrun.HomeFragment"
+        android:name="com.sweng411.smashrun.Activity.Fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/runsFragment"
-        android:name="com.sweng411.smashrun.AddRunFragment"
+        android:name="com.sweng411.smashrun.Activity.Fragment.AddRunFragment"
         android:label="fragment_runs"
         tools:layout="@layout/fragment_add_run" />
     <fragment
         android:id="@+id/listFragment"
-        android:name="com.sweng411.smashrun.RunsFragment"
+        android:name="com.sweng411.smashrun.Activity.Fragment.RunsFragment"
         android:label="fragment_list"
         tools:layout="@layout/fragment_runs" />
     <fragment
         android:id="@+id/badgesFragment"
-        android:name="com.sweng411.smashrun.BadgesFragment"
+        android:name="com.sweng411.smashrun.Activity.Fragment.BadgesFragment"
         android:label="fragment_badges"
         tools:layout="@layout/fragment_badges" />
 </navigation>

@@ -1,6 +1,7 @@
 package com.sweng411.smashrun;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.sweng411.smashrun.Model.Run;
-import com.sweng411.smashrun.State.RunsUiState;
 import com.sweng411.smashrun.State.UserRunUiState;
 
 import java.util.List;
@@ -19,16 +18,22 @@ import java.util.List;
 // Note that we specify the custom ViewHolder which gives us access to our views
 public class RunListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int TYPE = 1;
-    private final Context context;
-    private final List<UserRunUiState> listRecyclerItem;
-
-    public RunListAdapter(Context context, List<UserRunUiState> listRecyclerItem) {
-        this.context = context;
-        this.listRecyclerItem = listRecyclerItem;
+    public interface ListItemClickListener {
+        void onListItemClick(int position);
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
+    private static final int TYPE = 1;
+    private final Context context;
+    private final List<UserRunUiState> listRecyclerItems;
+    private final ListItemClickListener onClickListener;
+
+    public RunListAdapter(Context context, List<UserRunUiState> listRecyclerItems, ListItemClickListener listener) {
+        this.context = context;
+        this.listRecyclerItems = listRecyclerItems;
+        this.onClickListener = listener;
+    }
+
+    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView date;
         private TextView distance;
@@ -39,12 +44,20 @@ public class RunListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            date = (TextView) itemView.findViewById(R.id.run_date);
-            distance = (TextView) itemView.findViewById(R.id.run_distance);
-            pace = (TextView) itemView.findViewById(R.id.run_pace);
-            calories = (TextView) itemView.findViewById(R.id.run_calories);
-            duration = (TextView) itemView.findViewById(R.id.run_duration);
+            itemView.setOnClickListener(this);
+            date = itemView.findViewById(R.id.run_date);
+            distance = itemView.findViewById(R.id.run_distance);
+            pace = itemView.findViewById(R.id.run_pace);
+            calories = itemView.findViewById(R.id.run_calories);
+            duration = itemView.findViewById(R.id.run_duration);
         }
+
+        @Override
+        public void onClick(View view) {
+            int position = getBindingAdapterPosition();
+            onClickListener.onListItemClick(position);
+        }
+
     }
 
     @NonNull
@@ -57,7 +70,6 @@ public class RunListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 View layoutView = LayoutInflater.from(viewGroup.getContext()).inflate(
                         R.layout.run_list_item, viewGroup, false);
-
                 return new ItemViewHolder((layoutView));
         }
 
@@ -72,7 +84,7 @@ public class RunListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case TYPE:
             default:
                 ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
-                UserRunUiState run = listRecyclerItem.get(i);
+                UserRunUiState run = listRecyclerItems.get(i);
 
                 itemViewHolder.date.setText(run.date);
                 itemViewHolder.distance.setText(run.distance);
@@ -85,6 +97,6 @@ public class RunListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return listRecyclerItem.size();
+        return listRecyclerItems.size();
     }
 }

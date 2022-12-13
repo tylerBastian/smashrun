@@ -9,6 +9,8 @@
     <color name="textColorBlack">#0E0E0E</color>
     <color name="bottomNavBackground">#0E0E0E</color>
     <color name="listCardBackground">#414141</color>
-    <color name="listCardBorder">#4E4E4E</color>
+    <color name="listCardBorder">#ECECEC</color>
     <color name="iconColorNotSelected">#808080</color>
+    <color name="addRunCardBackground">#F0F0F0</color>
+    <color name="lowAlphaBackground">#80000000</color>
 </resources>
