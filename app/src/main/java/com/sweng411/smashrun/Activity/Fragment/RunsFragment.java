@@ -95,5 +95,11 @@ public class RunsFragment extends Fragment implements RunListAdapter.ListItemCli
         Log.d("Test", runs.get(position).date);
         EditRunFragment.newInstance(runs.get(position)).show(getChildFragmentManager(), null);
     }
+
+    public void Refresh() {
+        viewModel.GetUserRunsState(true).observe(this, (List<UserRunUiState> userRuns) -> {
+            InitRecyclerView(userRuns);
+        });
+    }
 }
 

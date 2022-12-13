@@ -265,7 +265,27 @@ public class HomeFragment extends Fragment {
     }
 
 
+    public void Refresh() {
+        viewModel.GetPieChartState(true).observe(this, state -> {
+            Log.d(TAG, "Updating PieChart");
+            UpdatePieChart(state);
+        });
+        viewModel.GetDistancePerMonthState(true).observe(this, state ->{
+            Log.d(TAG, "Updating BarChart");
+            UpdateBarChart(state);
+        });
+        viewModel.GetYearSummaryState(true).observe(this, state -> {
+            Log.d(TAG, "Updating YearSummary");
 
+            UpdateYearSummary(state);
+        });
+        viewModel.GetScatterPlotEntries(true).observe(this, state ->
+        {
+            Log.d(TAG, "Updating Scatter");
+            UpdateScatterChart(state);
+
+        });
+    }
 
 
     private void InitPieChart() {
@@ -419,6 +439,8 @@ public class HomeFragment extends Fragment {
         paceVsDistanceScatterChart.invalidate();
         paceVsDistanceScatterChart.animateXY(1000, 1000);
     }
+
+
 
 
 
