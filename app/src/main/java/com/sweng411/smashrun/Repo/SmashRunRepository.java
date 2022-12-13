@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.sweng411.smashrun.Model.Badge;
+import com.sweng411.smashrun.Model.Profile;
 import com.sweng411.smashrun.Model.Run;
 import com.sweng411.smashrun.Model.YearSummary;
 import com.sweng411.smashrun.RepoCallback;
@@ -102,6 +103,45 @@ public class SmashRunRepository {
 
 
     }
+    public void getProfile(RepoCallback<Profile> callback){
+        Profile Profile = new Profile();
+        String url = "https://api.smashrun.com/v1/my/userinfo";
+        String token = getSharedPref().getString("token","");
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+
+
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                Log.d("onFailure", "failure");
+                callback.HandleRepoData(Profile);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("onResponse", "entered");
+                if (response.isSuccessful()) {
+                    Log.d("onResponse", "success");
+
+                    try {
+                        JSONObject responseJSON = new JSONObject((response.body().string()));
+                        Profile.fName = responseJSON.optString("firstName");
+                        Profile.lName = responseJSON.optString("lastName");
+                        Profile.dateLastRunUTC = responseJSON.optString("dateTimeUTCOfLastRun");
+                        Profile.dateJoinedUTC = responseJSON.optString("registrationDateUTC");
+                    } catch (JSONException e){
+                        e.printStackTrace();
+                    }
+                    callback.HandleRepoData(Profile);
+                }
+            }
+        });
+    }
 
 
     //Get yearly stats
@@ -142,7 +182,6 @@ public class SmashRunRepository {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                     callback.HandleRepoData(yearSummary);
                 }
             }
