@@ -175,33 +175,6 @@ public class SmashRunRepository {
         });
     }
 
-    Run CreateUserRunFromJson(JSONObject userRunJson) {
-        Run userRun = new Run();
-
-        userRun.ActivityId = userRunJson.optInt("activityId", 0);
-        userRun.Calories = userRunJson.optInt("calories", 0);
-        userRun.Distance = (float) userRunJson.optDouble("distance", 0);
-        userRun.Duration = (float) userRunJson.optDouble("duration", 0);
-        userRun.Date= userRunJson.optString("startDateTimeLocal");
-        return userRun;
-    }
-
-    Badge CreateBadgeFromJson(JSONObject badgeJson) {
-        Badge badge = new Badge();
-
-        badge.id = badgeJson.optInt("badgeId", 0);
-        badge.name = badgeJson.optString("name");
-        badge.image = badgeJson.optString("image");
-        badge.imageSmall = badgeJson.optString("imageSmall");
-        badge.requirement = badgeJson.optString("requirement");
-        badge.dateEarnedUTC = badgeJson.optString("dateEarnedUTC");
-        badge.badgeOrder = badgeJson.optInt("badgeOrder", 0);
-
-        return badge;
-    }
-
-
-
     public void GetBadges(RepoCallback<ArrayList<Badge>> callback){
         ArrayList<Badge> badges = new ArrayList<>();
 
@@ -253,6 +226,82 @@ public class SmashRunRepository {
     }
 
 
+    Run CreateUserRunFromJson(JSONObject userRunJson) {
+        Run userRun = new Run();
+
+        userRun.ActivityId = userRunJson.optInt("activityId", 0);
+        userRun.Calories = userRunJson.optInt("calories", 0);
+        userRun.Distance = (float) userRunJson.optDouble("distance", 0);
+        userRun.Duration = (float) userRunJson.optDouble("duration", 0);
+        userRun.Date= userRunJson.optString("startDateTimeLocal");
+        return userRun;
+    }
+
+    Badge CreateBadgeFromJson(JSONObject badgeJson) {
+        Badge badge = new Badge();
+
+        badge.id = badgeJson.optInt("badgeId", 0);
+        badge.name = badgeJson.optString("name");
+        badge.image = badgeJson.optString("image");
+        badge.imageSmall = badgeJson.optString("imageSmall");
+        badge.requirement = badgeJson.optString("requirement");
+        badge.dateEarnedUTC = badgeJson.optString("dateEarnedUTC");
+        badge.badgeOrder = badgeJson.optInt("badgeOrder", 0);
+
+        return badge;
+    }
+
+
+
+
+
+    public void DeleteRun(int runID) {
+        String url = "https://api.smashrun.com/v1/my/activities/" + runID;
+        String token = getSharedPref().getString("token", "");
+        String auth = getSharedPref().getString("auth", "");
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", auth + " " + token)
+                .delete()
+                .build();
+
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("Repo", "onFailure: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("Repo", "onResponse: " + response.body().string());
+            }
+        });
+    }
+
+    public void EditRun(Run run) {
+        String json = "{\"startDateTimeLocal\":\"" + run.Date + "\",\"distance\":" + run.Distance + ",\"duration\":" + run.Duration + "}";
+
+        String url = "https://api.smashrun.com/v1/my/activities/" + run.ActivityId;
+        String token = getSharedPref().getString("token", "");
+        String auth = getSharedPref().getString("auth", "");
+        okhttp3.Request request = new okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", auth + " " + token)
+                .patch(okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json))
+                .build();
+
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("Repo", "onFailure: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("Repo", "onResponse: " + response.body().string());
+            }
+        });
+    }
 }
 
 

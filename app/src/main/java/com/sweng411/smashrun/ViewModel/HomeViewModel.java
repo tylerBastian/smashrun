@@ -100,8 +100,7 @@ public class HomeViewModel extends ViewModel {
         repository.GetRuns(runs -> {
             ArrayList<ScatterPlotEntry> entries = new ArrayList<>();
 
-            for (Run run:
-                 runs) {
+            for (Run run: runs) {
                 ScatterPlotEntry entry = new ScatterPlotEntry();
 
                 //Checks if date is within last 12 Months, if not it skips the run

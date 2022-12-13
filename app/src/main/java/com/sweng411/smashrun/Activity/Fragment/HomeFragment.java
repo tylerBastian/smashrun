@@ -210,7 +210,6 @@ public class HomeFragment extends Fragment {
 
 
         for(int i = 0; i < entries.size(); i++){
-
             scatterEntries.add(new Entry(entries.get(i).Distance, (entries.get(i).Pace)/60));
         }
 

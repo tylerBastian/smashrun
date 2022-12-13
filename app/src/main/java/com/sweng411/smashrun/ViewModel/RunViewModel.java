@@ -64,7 +64,8 @@ public class RunViewModel extends ViewModel {
 
                 state.date = dateStr;
 
-                state.time   = new SimpleDateFormat("HH:mm").format(dateObj);
+                state.time = new SimpleDateFormat("HH:mm").format(dateObj);
+                state.runId = run.ActivityId;
                 states.add(state);
             }
 

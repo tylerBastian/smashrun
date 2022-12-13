@@ -18,8 +18,13 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.sweng411.smashrun.Model.Run;
 import com.sweng411.smashrun.R;
 import com.sweng411.smashrun.State.UserRunUiState;
+import com.sweng411.smashrun.ViewModel.HomeViewModel;
+import com.sweng411.smashrun.ViewModel.RunEditorViewModel;
 
 import java.util.Calendar;
 
@@ -36,8 +41,8 @@ public class EditRunFragment extends DialogFragment {
     private Button deleteButton;
     private RelativeLayout addRunLayout;
 
+    private RunEditorViewModel viewModel;
 
-    UserRunUiState runToEdit;
 
     public EditRunFragment() {
 
@@ -46,6 +51,7 @@ public class EditRunFragment extends DialogFragment {
     public static EditRunFragment newInstance(UserRunUiState runToEdit) {
         EditRunFragment fragment = new EditRunFragment();
         Bundle args = new Bundle();
+        args.putInt("id", runToEdit.runId);
         args.putString("date", runToEdit.date);
         args.putString("time", runToEdit.time);
         args.putString("distance", runToEdit.distance);
@@ -54,6 +60,11 @@ public class EditRunFragment extends DialogFragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(RunEditorViewModel.class);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,6 +112,10 @@ public class EditRunFragment extends DialogFragment {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Run run = RetrieveDataFromEditor();
+                if(run != null) {
+                    viewModel.EditRun(run);
+                }
 
             }
         });
@@ -110,19 +125,49 @@ public class EditRunFragment extends DialogFragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dateText.setText("");
-                distanceText = view.findViewById(R.id.distance_edit);
-                distanceText.setText("");
-                timeText.findViewById(R.id.time_edit);
-                timeText.setText("");
-                durationText = view.findViewById(R.id.duration_edit);
-                durationText.setText("");
+                viewModel.DeleteRun(getArguments().getInt("id"));
             }
         });
         FillRunEditor(args.getString("date"), args.getString("time"), args.getString("duration"), args.getString("distance"));
 
         return view;
 
+    }
+
+    private Run RetrieveDataFromEditor() {
+        if (dateText.getText().toString().isEmpty() ||
+                distanceText.getText().toString().isEmpty() ||
+                timeText.getText().toString().isEmpty() ||
+                distanceText.getText().toString().isEmpty())
+        {
+            return null;
+        }
+
+        String dateString = dateText.getText().toString();
+        float distanceDouble = Float.parseFloat(distanceText.getText().toString());
+        String timeString = timeText.getText().toString();
+        String durationString = durationText.getText().toString();
+        //convert duration hh:mm:ss to seconds
+        String[] durationArray = durationString.split(":");
+        int durationSeconds = Integer.parseInt(durationArray[0]) * 3600 + Integer.parseInt(durationArray[1]) * 60 + Integer.parseInt(durationArray[2]);
+
+        //convert date string to yyyy-mm-dd format
+        String[] dateArray = dateString.split("/");
+        String year = dateArray[2];
+        String month = dateArray[1];
+        String day = dateArray[0];
+        String dateFormatted = year + "-" + month + "-" + day;
+
+        //startDateTimeLocal in ISO 8601 format
+        String startDateTimeLocal = dateFormatted + "T" + timeString + ":00-04:00";
+
+        //convert to json
+        Run run = new Run();
+        run.Duration = durationSeconds;
+        run.Distance = distanceDouble;
+        run.Date = startDateTimeLocal;
+        run.ActivityId = getArguments().getInt("id");
+        return run;
     }
 
     void FillRunEditor(String date, String time, String duration, String distance) {
