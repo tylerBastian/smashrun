@@ -39,7 +39,6 @@ public class EditRunFragment extends DialogFragment {
     private EditText durationText;
     private Button applyButton;
     private Button deleteButton;
-    private RelativeLayout addRunLayout;
 
     private RunEditorViewModel viewModel;
 
@@ -71,19 +70,9 @@ public class EditRunFragment extends DialogFragment {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         View view = inflater.inflate(R.layout.fragment_add_run, container);
 
-        Bundle args =getArguments();
+        Bundle args = getArguments();
 
-        addRunLayout = view.findViewById(R.id.add_run_parent_layout);
 
-        Log.d("ERF", "Creating ERF");
-
-        addRunLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //hide current fragment
-               // getActivity().getSupportFragmentManager().beginTransaction().remove(EditRunFragment.this).commit();
-            }
-        });
 
         dateText = view.findViewById(R.id.date_edit);
         durationText = view.findViewById(R.id.duration_edit);
@@ -170,7 +159,7 @@ public class EditRunFragment extends DialogFragment {
         return run;
     }
 
-    void FillRunEditor(String date, String time, String duration, String distance) {
+    private void FillRunEditor(String date, String time, String duration, String distance) {
         String[] dateArray = date.split("/");
         Log.d("ERF", date);
         Log.d("ERF", dateArray[0]);

@@ -122,14 +122,14 @@ public class HomeFragment extends Fragment {
 
     }
 
-    void UpdateYearSummary(YearSummaryUiState state) {
+    private void UpdateYearSummary(YearSummaryUiState state) {
         yearSummaryRunCount.setText(String.format("Total runs: %s", state.TotalRunCount));
         yearSummaryDistance.setText(String.format("Total miles run: %s ", state.TotalDistance));
         yearAveragePace.setText(String.format("Average pace: %s min/mi", state.AveragePace));
         yearAverageRunLength.setText(String.format("Average run length: %s mi", state.AverageRunLength));
     }
 
-    void UpdatePieChart(RunTimePieChartState state) {
+    private void UpdatePieChart(RunTimePieChartState state) {
         String label = "type";
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         Map<String, Integer> timeOfDayMap = new HashMap<>();
@@ -163,7 +163,7 @@ public class HomeFragment extends Fragment {
         runTimePieChart.postInvalidate();
     }
 
-    void UpdateBarChart(DistancePerMonthBarChartState state) {
+    private void UpdateBarChart(DistancePerMonthBarChartState state) {
         Map<String, Double> distancePerMonthMap = state.DistancePerMonthMap;
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         ArrayList<String> labels = new ArrayList<>();
@@ -213,7 +213,7 @@ public class HomeFragment extends Fragment {
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
     }
 
-    void UpdateScatterChart(ArrayList<ScatterPlotEntry> entries) {
+    private void UpdateScatterChart(ArrayList<ScatterPlotEntry> entries) {
         ArrayList<Integer> colors = new ArrayList<>();
         colors.add(Color.parseColor("#FF8D60"));
         colors.add(Color.parseColor("#FF6122"));

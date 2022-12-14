@@ -25,7 +25,7 @@ public class ProfileViewModel extends ViewModel {
             profileLiveData.setValue(storedProfile);
             return profileLiveData;
         }
-        repository.getProfile(profile -> {
+        repository.GetProfile(profile -> {
             ArrayList<ProfileUiState> states = new ArrayList<>();
             ProfileUiState state = new ProfileUiState();
             String jDate = profile.dateJoinedUTC.substring(0,10);

@@ -20,7 +20,7 @@ public class BadgeViewModel extends ViewModel {
 
 
     private SmashRunRepository repository = SmashRunRepository.GetInstance();
-    private final MutableLiveData<List<UserBadgeUiState>> userLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<UserBadgeUiState>> badgesLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
 
@@ -28,8 +28,8 @@ public class BadgeViewModel extends ViewModel {
 
         //Uses cached data
         if(!refresh && storedBadges != null) {
-            userLiveData.setValue(storedBadges);
-            return userLiveData;
+            badgesLiveData.setValue(storedBadges);
+            return badgesLiveData;
         }
 
         //Grabs data from repo using a callback
@@ -76,11 +76,11 @@ public class BadgeViewModel extends ViewModel {
             });
 
             storedBadges = states;
-            userLiveData.postValue(states);
+            badgesLiveData.postValue(states);
         });
 
         //Returns initial live data variable for UI to consume
-        return userLiveData;
+        return badgesLiveData;
     }
 
     public LiveData<Boolean> GetIsLoading() {
