@@ -387,14 +387,12 @@ public class HomeFragment extends Fragment {
     private void InitScatterChart() {
 
         XAxis xAxis = paceVsDistanceScatterChart.getXAxis();
-        xAxis.setDrawGridLines(false);
+        xAxis.setDrawGridLines(true);
         xAxis.setDrawLabels(true);
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawGridLinesBehindData(false);
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawLabels(true);
-        xAxis.setDrawLimitLinesBehindData(false);
-        xAxis.setDrawGridLinesBehindData(false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f);
         xAxis.setGranularityEnabled(true);
@@ -407,7 +405,7 @@ public class HomeFragment extends Fragment {
         yAxisLeft.setLabelCount(6);
 
 
-        yAxisLeft.setDrawGridLines(false);
+        yAxisLeft.setDrawGridLines(true);
         yAxisLeft.setDrawAxisLine(true);
         yAxisLeft.setDrawZeroLine(false);
         yAxisLeft.setInverted(true);
@@ -421,20 +419,15 @@ public class HomeFragment extends Fragment {
         yAxisRight.setEnabled(false);
 
 
-        paceVsDistanceScatterChart.setDrawGridBackground(false);
         paceVsDistanceScatterChart.setDrawBorders(false);
         paceVsDistanceScatterChart.setDrawMarkers(false);
         paceVsDistanceScatterChart.setDrawGridBackground(false);
-        paceVsDistanceScatterChart.setDrawBorders(false);
-        paceVsDistanceScatterChart.setDrawMarkers(false);
 
         paceVsDistanceScatterChart.setTouchEnabled(false);
         paceVsDistanceScatterChart.setDragEnabled(false);
         paceVsDistanceScatterChart.setScaleEnabled(false);
         paceVsDistanceScatterChart.setPinchZoom(false);
         paceVsDistanceScatterChart.setDoubleTapToZoomEnabled(false);
-        paceVsDistanceScatterChart.setHighlightPerDragEnabled(false);
-        paceVsDistanceScatterChart.setHighlightPerTapEnabled(false);
         paceVsDistanceScatterChart.setHighlightPerDragEnabled(false);
         paceVsDistanceScatterChart.setHighlightPerTapEnabled(false);
         paceVsDistanceScatterChart.setDescription(null);

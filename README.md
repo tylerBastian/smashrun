@@ -1,3 +1,6 @@
+**Note: There is currently a bug in Smashrun's API that affects certain PUT functionality.
+This affects the ability to edit certain fields when editing a run.**
+
 #Running the app:
 1) Create an android virtual device (AVD) in Android Studio (Ex: Pixel 4 XL API 30)
 2) Login with these dummy account credentials:
