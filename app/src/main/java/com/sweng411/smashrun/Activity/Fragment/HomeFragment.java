@@ -32,11 +32,14 @@ import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.sweng411.smashrun.R;
+import com.sweng411.smashrun.Repo.SmashRunRepository;
 import com.sweng411.smashrun.State.DistancePerMonthBarChartState;
+import com.sweng411.smashrun.State.ProfileUiState;
 import com.sweng411.smashrun.State.RunTimePieChartState;
 import com.sweng411.smashrun.State.ScatterPlotEntry;
 import com.sweng411.smashrun.State.YearSummaryUiState;
 import com.sweng411.smashrun.ViewModel.HomeViewModel;
+import com.sweng411.smashrun.ViewModel.ProfileViewModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,6 +57,7 @@ import java.util.Map;
 public class HomeFragment extends Fragment {
     private static final String TAG = "Home";
     private HomeViewModel viewModel;
+    private ProfileViewModel profileViewModel;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -104,7 +108,14 @@ public class HomeFragment extends Fragment {
         {
             Log.d(TAG, "Updating Scatter");
             UpdateScatterChart(state);
+        });
 
+        //update header_navigation_drawer.xml with profile info
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        profileViewModel.GetProfileState(false).observe(this, state -> {
+            Log.d(TAG, "Updating Profile");
+            TextView name = getActivity().findViewById(R.id.sign_in_text);
+            name.setText("Signed in as: " + state.fName + " " + state.lName);
         });
 
     }

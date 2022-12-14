@@ -12,9 +12,14 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     android:layout_marginEnd="24dp"
     android:textColor="@color/textColorWhite"
     android:textAppearance="?attr/textAppearanceHeadline6"
-    android:text="Smashrun" />
+    android:text="Smashrun"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:layout_marginBottom="12dp"
+        />
 
     <TextView
+        android:id="@+id/sign_in_text"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="24dp"
@@ -22,6 +27,6 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     android:layout_marginEnd="24dp"
     android:textColor="@color/textColorWhite"
     android:textAppearance="?attr/textAppearanceBody2"
-    android:text="Signed in as..." />
+    android:text="" />
 
 </LinearLayout>

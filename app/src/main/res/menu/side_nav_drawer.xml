@@ -10,15 +10,6 @@
         android:checkableBehavior="single"
         >
         <item
-            android:id="@+id/nav_camera"
-            android:title="Placeholder1" />
-        <item
-            android:id="@+id/nav_share"
-            android:title="Placeholder2" />
-        <item
-            android:id="@+id/nav_send"
-            android:title="Placeholder3" />
-        <item
             android:id="@+id/logout_drawer"
             android:icon="@drawable/logout_icon_foreground"
             android:title="Logout" />

@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.sweng411.smashrun.R;
 import com.sweng411.smashrun.State.ProfileUiState;
 import com.sweng411.smashrun.ViewModel.ProfileViewModel;
