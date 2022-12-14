@@ -45,6 +45,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -223,6 +225,14 @@ public class HomeFragment extends Fragment {
         for(int i = 0; i < entries.size(); i++){
             scatterEntries.add(new Entry(entries.get(i).Distance, (entries.get(i).Pace)/60));
         }
+
+        //sort x entries in ascending order
+        Collections.sort(scatterEntries, new Comparator<Entry>() {
+            @Override
+            public int compare(Entry o1, Entry o2) {
+                return Float.compare(o1.getX(), o2.getX());
+            }
+        });
 
         ScatterDataSet paceVsDistanceScatterDataSet = new ScatterDataSet(scatterEntries, "Miles");
         ScatterData paceVsDistanceScatterData = new ScatterData(paceVsDistanceScatterDataSet);
