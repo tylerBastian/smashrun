@@ -226,7 +226,7 @@ public class HomeFragment extends Fragment {
             scatterEntries.add(new Entry(entries.get(i).Distance, (entries.get(i).Pace)/60));
         }
 
-        //sort x entries in ascending order
+        //sort x entries in ascending order to avoid error in line chart
         Collections.sort(scatterEntries, new Comparator<Entry>() {
             @Override
             public int compare(Entry o1, Entry o2) {
