@@ -326,7 +326,7 @@ public class SmashRunRepository {
         okhttp3.Request request = new okhttp3.Request.Builder()
                 .url(url)
                 .addHeader("Authorization", auth + " " + token)
-                .patch(okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json))
+                .patch(okhttp3.RequestBody.create(json, okhttp3.MediaType.parse("application/json; charset=utf-8")))
                 .build();
 
         httpClient.newCall(request).enqueue(new Callback() {

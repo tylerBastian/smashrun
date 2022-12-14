@@ -82,16 +82,14 @@ public class EditRunFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                String[] dateArray = args.getString("date").split("/");
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         dateText.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
                     }
-                }, year, month, day);
+                }, 2000+ Integer.parseInt(dateArray[2]), Integer.parseInt(dateArray[1]) - 1, Integer.parseInt(dateArray[0]));
                 datePickerDialog.show();
             }
         });
@@ -104,6 +102,7 @@ public class EditRunFragment extends DialogFragment {
                 Run run = RetrieveDataFromEditor();
                 if(run != null) {
                     viewModel.EditRun(run);
+                    dismiss();
                 }
 
             }
@@ -114,7 +113,9 @@ public class EditRunFragment extends DialogFragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 viewModel.DeleteRun(getArguments().getInt("id"));
+                dismiss();
             }
         });
         FillRunEditor(args.getString("date"), args.getString("time"), args.getString("duration"), args.getString("distance"));
@@ -138,14 +139,14 @@ public class EditRunFragment extends DialogFragment {
         String durationString = durationText.getText().toString();
         //convert duration hh:mm:ss to seconds
         String[] durationArray = durationString.split(":");
-        int durationSeconds = Integer.parseInt(durationArray[0]) * 3600 + Integer.parseInt(durationArray[1]) * 60 + Integer.parseInt(durationArray[2]);
+        int durationSeconds = Integer.parseInt(durationArray[0]) * 3600 + Integer.parseInt(durationArray[1]) * 60;
 
         //convert date string to yyyy-mm-dd format
         String[] dateArray = dateString.split("/");
         String year = dateArray[2];
         String month = dateArray[1];
         String day = dateArray[0];
-        String dateFormatted = year + "-" + month + "-" + day;
+        String dateFormatted = year + "-" + day + "-" + month;
 
         //startDateTimeLocal in ISO 8601 format
         String startDateTimeLocal = dateFormatted + "T" + timeString + ":00-04:00";
@@ -167,7 +168,7 @@ public class EditRunFragment extends DialogFragment {
         String month = dateArray[1];
         String day = dateArray[0];
 
-        String dateString = day + "/" + (month + 1) + "/" + year;
+        String dateString = day + "/" + month + "/" + year;
         dateText.setText(dateString);
         durationText.setText(duration);
         distanceText.setText(distance);
