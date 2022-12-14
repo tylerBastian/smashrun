@@ -52,9 +52,8 @@ public class HomeViewModel extends ViewModel {
             yearSummaryUiState.TotalDistance = String.format("%.2f", yearSummary.Distance * 0.621371);
             yearSummaryUiState.TotalRunCount = String.valueOf(yearSummary.RunCount);
             yearSummaryUiState.AveragePace = minPerKmtoMinPerMile(yearSummary.AveragePace);
-            //Why is this multiplied by 0.621
             yearSummaryUiState.AverageRunLength = String.format("%.2f", yearSummary.AverageRunLength * 0.621371);
-
+            storedYearSummaryState = yearSummaryUiState;
             yearSummaryLiveData.postValue(yearSummaryUiState);
         });
 
@@ -71,6 +70,7 @@ public class HomeViewModel extends ViewModel {
             RunTimePieChartState state = new RunTimePieChartState();
             state.AM = stats.AmRuns;
             state.PM = stats.PmRuns;
+            storedPieChartState = state;
             runTimePieChartStateMutableLiveData.postValue(state);
         });
         return runTimePieChartStateMutableLiveData;
@@ -83,10 +83,10 @@ public class HomeViewModel extends ViewModel {
         }
         repository.GetRuns(runs -> {
             DistancePerMonthBarChartState state = new DistancePerMonthBarChartState();
-
-
             state.DistancePerMonthMap = getDistancePerMonth(runs);
+            storedBarChartState = state;
             distancePerMonthBarChartStateMutableLiveData.postValue(state);
+
         });
 
         return distancePerMonthBarChartStateMutableLiveData;
@@ -120,7 +120,7 @@ public class HomeViewModel extends ViewModel {
                 entry.Pace = run.Duration / (run.Distance * Float.parseFloat("0.621371"));
                 entries.add(entry);
             }
-
+            storedScatterState = entries;
             scatterPlotLiveData.postValue(entries);
 
         });
