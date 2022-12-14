@@ -159,7 +159,7 @@ public class EditRunFragment extends DialogFragment {
         return run;
     }
 
-    void FillRunEditor(String date, String time, String duration, String distance) {
+    private void FillRunEditor(String date, String time, String duration, String distance) {
         String[] dateArray = date.split("/");
         Log.d("ERF", date);
         Log.d("ERF", dateArray[0]);

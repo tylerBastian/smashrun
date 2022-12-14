@@ -55,13 +55,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPref = getSharedPreferences("com.sweng411.smashrun", Context.MODE_PRIVATE);
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         //Check if user has already signed in if yes send to mainActivity
         //This to avoid signing in everytime you open the app.
         super.onStart();

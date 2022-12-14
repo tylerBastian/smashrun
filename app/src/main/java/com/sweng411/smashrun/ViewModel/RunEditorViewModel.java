@@ -10,7 +10,7 @@ public class RunEditorViewModel extends ViewModel {
     SmashRunRepository repository = SmashRunRepository.GetInstance();
 
     public void PostRun(Run run ) {
-        repository.PostRuns(run);
+        repository.PostRun(run);
     }
     public void DeleteRun(int runID) {
         repository.DeleteRun(runID);

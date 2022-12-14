@@ -30,10 +30,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HomeViewModel extends ViewModel {
-    private static DistancePerMonthBarChartState storedBarChartState;
-    private static RunTimePieChartState storedPieChartState;
-    private static YearSummaryUiState storedYearSummaryState;
-    private static ArrayList<ScatterPlotEntry> storedScatterState;
+    private static DistancePerMonthBarChartState storedBarChartState = null;
+    private static RunTimePieChartState storedPieChartState = null;
+    private static YearSummaryUiState storedYearSummaryState = null;
+    private static ArrayList<ScatterPlotEntry> storedScatterState = null;
 
     private SmashRunRepository repository = SmashRunRepository.GetInstance();
     private final MutableLiveData<DistancePerMonthBarChartState> distancePerMonthBarChartStateMutableLiveData = new MutableLiveData<>();

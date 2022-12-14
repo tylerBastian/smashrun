@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPref = getSharedPreferences("com.sweng411.smashrun", Context.MODE_PRIVATE);
         setContentView(R.layout.activity_main);
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);

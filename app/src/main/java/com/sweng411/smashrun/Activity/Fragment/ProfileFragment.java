@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment {
         });
 
     }
-    void UpdateProfile(ProfileUiState state){
+    private void UpdateProfile(ProfileUiState state){
         userName.setText(String.format("Name:\n%s %s", state.fName, state.lName));
         dateJoined.setText(String.format("Date Joined:\n %s", state.dateJoinedUTC));
         lastRunDate.setText(String.format("Last Run Date:\n %s", state.dateLastRunUTC));

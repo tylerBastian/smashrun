@@ -103,7 +103,7 @@ public class SmashRunRepository {
 
 
     }
-    public void getProfile(RepoCallback<Profile> callback){
+    public void GetProfile(RepoCallback<Profile> callback){
         Profile Profile = new Profile();
         String url = "https://api.smashrun.com/v1/my/userinfo";
         String token = getSharedPref().getString("token","");
@@ -188,7 +188,7 @@ public class SmashRunRepository {
         });
     }
 
-    public void PostRuns(Run run) {
+    public void PostRun(Run run) {
 
         String json = "{\"startDateTimeLocal\":\"" + run.Date + "\",\"distance\":" + run.Distance + ",\"duration\":" + run.Duration + "}";
 
